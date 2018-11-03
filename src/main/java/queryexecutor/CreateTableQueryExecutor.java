@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import contract.QueryExecutor;
 import core.RandomAccessFile;
 
 import core.DatabaseDir;
@@ -12,14 +13,14 @@ import exception.UnexpectedErrorException;
 import query.CreateTableQuery;
 import scheme.ColumnScheme;
 
-public class CreateTableQueryExecutor {
+public class CreateTableQueryExecutor implements QueryExecutor<Void, CreateTableQuery>{
     private final DatabaseDir databaseDir;
 
     public CreateTableQueryExecutor(DatabaseDir databaseDir) {
         this.databaseDir = databaseDir;
     }
 
-    public void execute(CreateTableQuery query) throws TableAlreadyExistsException, UnexpectedErrorException {
+    public Void execute(CreateTableQuery query) throws TableAlreadyExistsException, UnexpectedErrorException {
         Integer techStuffLength = 0;
         RandomAccessFile table;
         File tableFile = new File(databaseDir.getDirectory(), query.getTableScheme().getName());
@@ -37,6 +38,7 @@ public class CreateTableQueryExecutor {
 
             List<ColumnScheme> columnSchemeList = query.getTableScheme().getColumns();
 
+            techStuffLength += 4;
             // 4 bytes for the int indicating length of table's name
             techStuffLength += 4;
             // table's name length
@@ -57,26 +59,25 @@ public class CreateTableQueryExecutor {
                 techStuffLength += 4;
             }
 
-            table.writeInt(techStuffLength);
-
+            table.write4BytesNumber(techStuffLength);
+            // write number of rows
+            table.write4BytesNumber(0);
             // write length of table's name
-            table.writeInt(query.getTableScheme().getName().getBytes().length);
+            table.write4BytesNumber(query.getTableScheme().getName().getBytes().length);
             // write table name
             table.writeASCII(query.getTableScheme().getName());
-            // write number of rows
-            table.writeInt(0);
             // write number of columns
-            table.writeInt(columnSchemeList.size());
+            table.write4BytesNumber(columnSchemeList.size());
 
             for (ColumnScheme columnScheme : columnSchemeList) {
                 // write length of column's name
-                table.writeInt(columnScheme.getName().getBytes().length);
+                table.write4BytesNumber(columnScheme.getName().getBytes().length);
                 // write column name
                 table.writeASCII(columnScheme.getName());
                 // write column type
-                table.writeInt(columnScheme.getType());
+                table.write4BytesNumber(columnScheme.getType());
                 // write column size
-                table.writeInt(columnScheme.getSize());
+                table.write4BytesNumber(columnScheme.getSize());
             }
 
             table.close();
@@ -84,5 +85,6 @@ public class CreateTableQueryExecutor {
             throw new UnexpectedErrorException("An error has occurred while writing into the table file.", e);
         }
 
+        return null;
     }
 }

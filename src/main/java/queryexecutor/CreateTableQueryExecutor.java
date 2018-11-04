@@ -21,9 +21,11 @@ public class CreateTableQueryExecutor implements QueryExecutor<Void, CreateTable
     }
 
     public Void execute(CreateTableQuery query) throws TableAlreadyExistsException, UnexpectedErrorException {
-        Integer techStuffLength = 0;
+        List<ColumnScheme> columnSchemeList;
         RandomAccessFile table;
-        File tableFile = new File(databaseDir.getDirectory(), query.getTableScheme().getName());
+        File tableFile;
+
+        tableFile = new File(databaseDir.getDirectory(), query.getTableScheme().getName());
 
         try {
             if (!tableFile.createNewFile()) {
@@ -35,50 +37,29 @@ public class CreateTableQueryExecutor implements QueryExecutor<Void, CreateTable
 
         try {
             table = new RandomAccessFile(tableFile, "rw");
+            columnSchemeList = query.getTableScheme().getColumns();
 
-            List<ColumnScheme> columnSchemeList = query.getTableScheme().getColumns();
-
-            techStuffLength += 4;
-            // 4 bytes for the int indicating length of table's name
-            techStuffLength += 4;
-            // table's name length
-            techStuffLength += query.getTableScheme().getName().getBytes().length;
-            // 4 bytes for the int indicating number of rows
-            techStuffLength += 4;
-            // 4 bytes for the int indicating number of columns
-            techStuffLength += 4;
-
-            for (ColumnScheme columnScheme : columnSchemeList) {
-                // 4 bytes for the int indicating length of column's name
-                techStuffLength += 4;
-                // column's name length
-                techStuffLength += columnScheme.getName().getBytes().length;
-                // 4 bytes for the int indicating column type
-                techStuffLength += 4;
-                // 4 bytes for the int indicating column size
-                techStuffLength += 4;
-            }
-
-            table.write4BytesNumber(techStuffLength);
-            // write number of rows
+            // 0.
             table.write4BytesNumber(0);
-            // write length of table's name
-            table.write4BytesNumber(query.getTableScheme().getName().getBytes().length);
-            // write table name
+            // 1. number of rows
+            table.write4BytesNumber(0);
+            // 2. table name
             table.writeASCII(query.getTableScheme().getName());
-            // write number of columns
+            // 3. number of columns
             table.write4BytesNumber(columnSchemeList.size());
 
             for (ColumnScheme columnScheme : columnSchemeList) {
-                // write length of column's name
-                table.write4BytesNumber(columnScheme.getName().getBytes().length);
-                // write column name
+                // 3.1 column name
                 table.writeASCII(columnScheme.getName());
-                // write column type
+                // 3.2 column type
                 table.write4BytesNumber(columnScheme.getType());
-                // write column size
+                // 3.3 column size
                 table.write4BytesNumber(columnScheme.getSize());
             }
+
+            table.seek(0);
+
+            table.write4BytesNumber((int) table.length());
 
             table.close();
         } catch (Throwable e) {

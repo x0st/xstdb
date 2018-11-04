@@ -29,6 +29,15 @@ public class RandomAccessFile extends java.io.RandomAccessFile {
         return read();
     }
 
+    public String readASCII() throws IOException {
+        int numberOfBytes = read4BytesNumber();
+        byte[] stringAsBytes = new byte[numberOfBytes];
+
+        read(stringAsBytes, 0, numberOfBytes);
+
+        return new String(stringAsBytes, StandardCharsets.UTF_8);
+    }
+
     public String readASCII(int length) throws IOException {
         int i;
         byte[] container = new byte[length];

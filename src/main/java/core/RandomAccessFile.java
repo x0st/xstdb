@@ -50,7 +50,11 @@ public class RandomAccessFile extends java.io.RandomAccessFile {
     }
 
     public void writeASCII(String string) throws IOException {
-        for (byte b : string.getBytes()) {
+        byte[] bytes = string.getBytes();
+
+        write4BytesNumber(bytes.length);
+
+        for (byte b : bytes) {
             write(b);
         }
     }

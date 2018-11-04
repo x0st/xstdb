@@ -1,9 +1,7 @@
 package queryexecutor;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +23,16 @@ public class DescribeTableQueryExecutor implements QueryExecutor<TableScheme, De
 
     public TableScheme execute(DescribeTableQuery query) throws TableDoesNotExistException, UnexpectedErrorException {
         RandomAccessFile table;
-        File tableFile = new File(databaseDir.getDirectory(), query.getTableName());
+        int numberOfRows;
+        int numberOfColumns;
+        int columnType;
+        int columnSize;
+        String tableName;
+        String columnName;
+        File tableFile;
+        List<ColumnScheme> columnSchemeList;
+
+        tableFile = new File(databaseDir.getDirectory(), query.getTableName());
 
         if (!tableFile.exists()) {
             throw new TableDoesNotExistException("A table with this name does not exist.");
@@ -33,54 +40,33 @@ public class DescribeTableQueryExecutor implements QueryExecutor<TableScheme, De
 
         try {
             table = new RandomAccessFile(tableFile, "rw");
-            List<ColumnScheme> columnSchemeList = new ArrayList<>();
+            columnSchemeList = new ArrayList<>();
 
-            Integer lengthOfColumnsName;
-            Integer lengthOfTablesName;
-            Integer numberOfRows;
-            Integer numberOfColumns;
-            Integer columnType;
-            Integer columnSize;
-
-            // set pointer at the beginning
+            // first 4 bytes are reserved for the integer that represents the number of bytes allocated for table scheme
             table.seek(4);
-            // number of rows the table contains
+
             numberOfRows = table.read4BytesNumber();
-            // this is needed to allocate the exact amount of bytes for name
-            lengthOfTablesName = table.read4BytesNumber();
-            // where table's name is stored
-            byte[] tableNameAsBytes = new byte[lengthOfTablesName];
-            // read table's name
-            table.read(tableNameAsBytes, 0, lengthOfTablesName);
-            // number of columns the table contains
+
+            tableName = table.readASCII();
+
             numberOfColumns = table.read4BytesNumber();
 
             // gather columns
             for (int i = 0; i < numberOfColumns; i++) {
-                // this is needed to allocate the exact amount of bytes for name
-                lengthOfColumnsName = table.read4BytesNumber();
-                // where column's name is stored
-                byte[] columnName = new byte[lengthOfColumnsName];
-                // read column's name
-                table.read(columnName, 0, lengthOfColumnsName);
-                // type of the column (int, char)
+                columnName = table.readASCII();
+                // type of column (int, char)
                 columnType = table.read4BytesNumber();
-                // the max number of bytes the column can hold
+                // the max number of bytes the column can contain
                 columnSize = table.read4BytesNumber();
 
-                // complement the column's list
                 columnSchemeList.add(
-                        new ColumnScheme(
-                                new String(columnName, StandardCharsets.UTF_8),
-                                columnType,
-                                columnSize
-                        )
+                        new ColumnScheme(columnName, columnType, columnSize)
                 );
             }
 
             table.close();
 
-            return new TableScheme(new String(tableNameAsBytes, StandardCharsets.UTF_8), numberOfRows, columnSchemeList);
+            return new TableScheme(tableName, numberOfRows, columnSchemeList);
         } catch (IOException e) {
             throw new UnexpectedErrorException("An error has occurred while reading from the table file.", e);
         }

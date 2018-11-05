@@ -39,23 +39,14 @@ public class RandomAccessFile extends java.io.RandomAccessFile {
     }
 
     public String readASCII(int length) throws IOException {
-        int i;
-        byte[] container = new byte[length];
-        read(container, 0, length);
+        int numberOfBytes = read4BytesNumber();
+        byte[] stringAsBytes = new byte[numberOfBytes];
 
-        for (i = 0; i < container.length; i++) {
-            if (container[i] == 0) {
-                break;
-            }
-        }
+        read(stringAsBytes, 0, numberOfBytes);
 
-        byte[] a = new byte[i];
+        seek(getFilePointer() + length - numberOfBytes);
 
-        for (int j = 0; j < i; j++) {
-            a[j] = container[j];
-        }
-
-        return new String(a, StandardCharsets.UTF_8);
+        return new String(stringAsBytes, StandardCharsets.UTF_8);
     }
 
     public void writeASCII(String string) throws IOException {

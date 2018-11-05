@@ -63,6 +63,8 @@ public class CreateTableQueryExecutor implements QueryExecutor<Void, CreateTable
 
             table.close();
         } catch (Throwable e) {
+            tableFile.delete();
+
             throw new UnexpectedErrorException("An error has occurred while writing into the table file.", e);
         }
 

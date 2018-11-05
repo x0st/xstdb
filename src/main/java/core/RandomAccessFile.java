@@ -67,4 +67,24 @@ public class RandomAccessFile extends java.io.RandomAccessFile {
             write(b);
         }
     }
+
+    public void writeASCII(String string, int length) throws IOException {
+        int i = 0;
+        byte[] bytes = string.getBytes();
+
+        write4BytesNumber(bytes.length);
+
+        for (byte b : bytes) {
+            write(b);
+            i++;
+
+            if (i >= length) {
+                break;
+            }
+        }
+
+        for (; i < length; i++) {
+            write(0);
+        }
+    }
 }

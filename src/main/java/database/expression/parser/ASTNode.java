@@ -12,6 +12,11 @@ public class ASTNode {
         mCharArrayValue = value;
     }
 
+    public ASTNode(byte token, boolean value) {
+        mToken = token;
+        mBooleanValue = value;
+    }
+
     public ASTNode getLeft() {
         return mLeft;
     }

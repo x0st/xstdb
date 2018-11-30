@@ -1,6 +1,6 @@
-package query;
+package database.query;
 
-import contract.Query;
+import database.contract.Query;
 
 public class DescribeTableQuery implements Query {
     private String tableName;

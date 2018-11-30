@@ -1,10 +1,10 @@
-package queryparser;
+package database.queryparser;
 
 import org.json.JSONObject;
 
-import contract.QueryParser;
-import exception.BadQueryException;
-import query.DescribeTableQuery;
+import database.contract.QueryParser;
+import database.exception.BadQueryException;
+import database.query.DescribeTableQuery;
 
 public class DescribeTableQueryParser implements QueryParser<DescribeTableQuery> {
 

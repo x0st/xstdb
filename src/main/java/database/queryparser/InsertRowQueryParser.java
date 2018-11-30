@@ -1,10 +1,10 @@
-package queryparser;
+package database.queryparser;
 
 import org.json.JSONObject;
 
-import contract.QueryParser;
-import exception.BadQueryException;
-import query.InsertRowQuery;
+import database.contract.QueryParser;
+import database.exception.BadQueryException;
+import database.query.InsertRowQuery;
 
 public class InsertRowQueryParser implements QueryParser<InsertRowQuery> {
 

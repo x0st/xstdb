@@ -1,4 +1,4 @@
-package contract;
+package database.contract;
 
 public interface Query {
 }

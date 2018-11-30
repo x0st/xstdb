@@ -1,4 +1,4 @@
-package exception;
+package database.exception;
 
 public class BadQueryException extends Exception {
     public BadQueryException(String message) {

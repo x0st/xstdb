@@ -1,10 +1,10 @@
-package query;
+package database.query;
 
 import java.util.List;
 
-import contract.Query;
-import scheme.ColumnScheme;
-import scheme.TableScheme;
+import database.contract.Query;
+import database.scheme.ColumnScheme;
+import database.scheme.TableScheme;
 
 public class CreateTableQuery implements Query {
     private TableScheme tableScheme;

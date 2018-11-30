@@ -1,4 +1,4 @@
-package exception;
+package database.exception;
 
 public class UnexpectedErrorException extends Exception {
     public UnexpectedErrorException(String message) {

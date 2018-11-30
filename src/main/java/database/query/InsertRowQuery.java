@@ -1,8 +1,8 @@
-package query;
+package database.query;
 
 import java.util.Map;
 
-import contract.Query;
+import database.contract.Query;
 
 public class InsertRowQuery implements Query {
     private String tableName;

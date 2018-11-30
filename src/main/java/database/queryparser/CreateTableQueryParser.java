@@ -1,4 +1,4 @@
-package queryparser;
+package database.queryparser;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -6,10 +6,10 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import contract.QueryParser;
-import exception.BadQueryException;
-import query.CreateTableQuery;
-import scheme.ColumnScheme;
+import database.contract.QueryParser;
+import database.exception.BadQueryException;
+import database.query.CreateTableQuery;
+import database.scheme.ColumnScheme;
 
 public class CreateTableQueryParser implements QueryParser<CreateTableQuery> {
 

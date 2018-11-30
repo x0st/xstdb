@@ -1,4 +1,4 @@
-package scheme;
+package database.scheme;
 
 import java.util.List;
 

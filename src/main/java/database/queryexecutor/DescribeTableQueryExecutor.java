@@ -1,18 +1,18 @@
-package queryexecutor;
+package database.queryexecutor;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import contract.QueryExecutor;
-import core.DatabaseDir;
-import core.RandomAccessFile;
-import exception.TableDoesNotExistException;
-import exception.UnexpectedErrorException;
-import query.DescribeTableQuery;
-import scheme.ColumnScheme;
-import scheme.TableScheme;
+import database.contract.QueryExecutor;
+import database.DatabaseDir;
+import database.RandomAccessFile;
+import database.exception.TableDoesNotExistException;
+import database.exception.UnexpectedErrorException;
+import database.query.DescribeTableQuery;
+import database.scheme.ColumnScheme;
+import database.scheme.TableScheme;
 
 public class DescribeTableQueryExecutor implements QueryExecutor<TableScheme, DescribeTableQuery> {
     private final DatabaseDir databaseDir;
@@ -42,7 +42,7 @@ public class DescribeTableQueryExecutor implements QueryExecutor<TableScheme, De
             table = new RandomAccessFile(tableFile, "rw");
             columnSchemeList = new ArrayList<>();
 
-            // first 4 bytes are reserved for the integer that represents the number of bytes allocated for table scheme
+            // first 4 bytes are reserved for the integer that represents the number of bytes allocated for table database.scheme
             table.seek(4);
 
             numberOfRows = table.read4BytesNumber();

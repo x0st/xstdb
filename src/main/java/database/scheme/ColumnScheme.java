@@ -1,4 +1,4 @@
-package scheme;
+package database.scheme;
 
 public class ColumnScheme {
     private String name;

@@ -1,17 +1,17 @@
-package queryexecutor;
+package database.queryexecutor;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import contract.QueryExecutor;
-import core.RandomAccessFile;
+import database.contract.QueryExecutor;
+import database.RandomAccessFile;
 
-import core.DatabaseDir;
-import exception.TableAlreadyExistsException;
-import exception.UnexpectedErrorException;
-import query.CreateTableQuery;
-import scheme.ColumnScheme;
+import database.DatabaseDir;
+import database.exception.TableAlreadyExistsException;
+import database.exception.UnexpectedErrorException;
+import database.query.CreateTableQuery;
+import database.scheme.ColumnScheme;
 
 public class CreateTableQueryExecutor implements QueryExecutor<Void, CreateTableQuery>{
     private final DatabaseDir databaseDir;

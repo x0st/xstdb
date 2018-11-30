@@ -1,20 +1,18 @@
-package queryexecutor;
+package database.queryexecutor;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Map;
 
-import contract.QueryExecutor;
-import core.DatabaseDir;
-import core.RandomAccessFile;
-import exception.BadQueryException;
-import exception.TableDoesNotExistException;
-import exception.UnexpectedErrorException;
-import query.DescribeTableQuery;
-import query.InsertRowQuery;
-import scheme.ColumnScheme;
-import scheme.TableScheme;
+import database.contract.QueryExecutor;
+import database.DatabaseDir;
+import database.RandomAccessFile;
+import database.exception.BadQueryException;
+import database.exception.TableDoesNotExistException;
+import database.exception.UnexpectedErrorException;
+import database.query.DescribeTableQuery;
+import database.query.InsertRowQuery;
+import database.scheme.ColumnScheme;
+import database.scheme.TableScheme;
 
 public class InsertRowQueryExecutor implements QueryExecutor<Void, InsertRowQuery> {
     private final DatabaseDir databaseDir;

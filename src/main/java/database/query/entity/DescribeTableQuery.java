@@ -1,8 +1,9 @@
-package database.query;
+package database.query.entity;
 
+import database.contract.HasTableName;
 import database.contract.Query;
 
-public class DescribeTableQuery implements Query {
+public class DescribeTableQuery implements Query, HasTableName {
     private String tableName;
 
     public DescribeTableQuery(String table) {

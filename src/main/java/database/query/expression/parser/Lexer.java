@@ -1,8 +1,8 @@
-package database.expression.parser;
+package database.query.expression.parser;
 
 import database.exception.TokenizationException;
 
-import static database.expression.Token.Type.*;
+import static database.query.expression.Token.Type.*;
 
 public class Lexer {
     private char[] input;

@@ -1,25 +1,42 @@
 package database.scheme;
 
+import java.util.Arrays;
+
+import database.DataType;
+
 public class ColumnScheme {
-    private String name;
-    private Integer type;
-    private Integer size;
+    private char[] mName;
+    private int mSize;
+    private DataType mType;
+    private int mNameHash;
 
-    public ColumnScheme(String name, Integer type, Integer size) {
-        this.name = name;
-        this.type = type;
-        this.size = size;
+    public ColumnScheme(char[] name, DataType type, int size) {
+        mName = name;
+        mType = type;
+        mSize = size;
+        mNameHash = Arrays.hashCode(name);
     }
 
-    public String getName() {
-        return name;
+    public ColumnScheme(char[] name, DataType type) {
+        mName = name;
+        mType = type;
+        mSize = type.getSize();
+        mNameHash = Arrays.hashCode(name);
     }
 
-    public Integer getType() {
-        return type;
+    public char[] getName() {
+        return mName;
     }
 
-    public Integer getSize() {
-        return size;
+    public DataType getType() {
+        return mType;
+    }
+
+    public int getSize() {
+        return mSize;
+    }
+
+    public int getNameHash() {
+        return mNameHash;
     }
 }

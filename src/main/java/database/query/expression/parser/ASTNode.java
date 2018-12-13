@@ -1,20 +1,16 @@
-package database.expression.parser;
+package database.query.expression.parser;
 
 public class ASTNode {
     private ASTNode mLeft;
     private ASTNode mRight;
     private byte mToken;
     private char[] mCharArrayValue;
-    private boolean mBooleanValue;
+    private int mFastAccessMark;
 
     public ASTNode(byte token, char[] value) {
         mToken = token;
         mCharArrayValue = value;
-    }
-
-    public ASTNode(byte token, boolean value) {
-        mToken = token;
-        mBooleanValue = value;
+        mFastAccessMark = -1;
     }
 
     public ASTNode getLeft() {
@@ -25,28 +21,12 @@ public class ASTNode {
         return mRight;
     }
 
-    public boolean getBooleanValue() {
-        return mBooleanValue;
-    }
-
     public char[] getCharArrayValue() {
         return mCharArrayValue;
     }
 
     public byte getToken() {
         return mToken;
-    }
-
-    public void setToken(byte token) {
-        mToken = token;
-    }
-
-    public void setBooleanValue(boolean value) {
-        mBooleanValue = value;
-    }
-
-    public void setCharArrayValue(char[] value) {
-        mCharArrayValue = value;
     }
 
     public ASTNode setLeft(ASTNode left) {
@@ -59,5 +39,13 @@ public class ASTNode {
         mRight = right;
 
         return this;
+    }
+
+    public void mark(int marker) {
+        mFastAccessMark = marker;
+    }
+
+    public int getMarker() {
+        return mFastAccessMark;
     }
 }

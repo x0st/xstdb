@@ -1,27 +1,25 @@
 package database.scheme;
 
-import java.util.List;
-
 public class TableScheme {
-    private String name;
-    private Integer rowsCount;
-    private List<ColumnScheme> columns;
+    private char[] mName;
+    private int mRowsCount;
+    private ColumnScheme[] mColumns;
 
-    public TableScheme(String name, Integer rowsCount, List<ColumnScheme> columns) {
-        this.name = name;
-        this.columns = columns;
-        this.rowsCount = rowsCount;
+    public TableScheme(char[] name, int rowsCount, ColumnScheme[] columns) {
+        mName = name;
+        mColumns = columns;
+        mRowsCount = rowsCount;
     }
 
-    public String getName() {
-        return name;
+    public char[] getName() {
+        return mName;
     }
 
-    public Integer getRowsCount() {
-        return rowsCount;
+    public int getRowsCount() {
+        return mRowsCount;
     }
 
-    public List<ColumnScheme> getColumns() {
-        return columns;
+    public ColumnScheme[] getColumns() {
+        return mColumns;
     }
 }

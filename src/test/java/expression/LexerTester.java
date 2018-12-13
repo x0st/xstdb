@@ -1,16 +1,16 @@
 package expression;
 
-import static database.expression.Token.Type.COLUMN;
-import static database.expression.Token.Type.LOGICAL_OPERATOR;
-import static database.expression.Token.Type.MATH_OPERATOR;
-import static database.expression.Token.Type.PLACEHOLDER;
+import static database.query.expression.Token.Type.COLUMN;
+import static database.query.expression.Token.Type.LOGICAL_OPERATOR;
+import static database.query.expression.Token.Type.MATH_OPERATOR;
+import static database.query.expression.Token.Type.PLACEHOLDER;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 
 import database.exception.TokenizationException;
-import database.expression.parser.Lexer;
+import database.query.expression.parser.Lexer;
 
 public class LexerTester {
 

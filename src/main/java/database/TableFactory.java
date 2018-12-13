@@ -12,8 +12,8 @@ public class TableFactory {
     }
 
     public Table make(HasTableName v) {
-        File data = new File(mDirPath, v.getTableName());
-        File definition = new File(mDirPath, v.getTableName() + "_definition");
+        File data = new File(mDirPath, v.getTableName() + ".dat");
+        File definition = new File(mDirPath, v.getTableName() + ".def");
 
         return new Table(data, definition);
     }

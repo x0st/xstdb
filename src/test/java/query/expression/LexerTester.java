@@ -1,4 +1,4 @@
-package expression;
+package query.expression;
 
 import static database.query.expression.Token.Type.COLUMN;
 import static database.query.expression.Token.Type.LOGICAL_OPERATOR;

@@ -1,4 +1,4 @@
-package expression;
+package query.expression;
 
 import org.junit.jupiter.api.Test;
 

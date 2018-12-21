@@ -3,7 +3,6 @@ package database;
 import java.util.Arrays;
 
 import database.contract.ValueHolder;
-import database.hash.Hasher;
 
 public class Value implements ValueHolder {
     private DataType mDataType;

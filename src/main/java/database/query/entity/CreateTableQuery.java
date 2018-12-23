@@ -8,8 +8,8 @@ import database.scheme.TableScheme;
 public class CreateTableQuery implements Query, HasTableName {
     private TableScheme tableScheme;
 
-    public CreateTableQuery(char[] table, ColumnScheme[] columnSchemeList) {
-        tableScheme = new TableScheme(table, 0, columnSchemeList);
+    public CreateTableQuery(String table, ColumnScheme[] columnSchemeList) {
+        tableScheme = new TableScheme(table.toCharArray(), 0, columnSchemeList);
     }
 
     public TableScheme getTableScheme() {

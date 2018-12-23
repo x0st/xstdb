@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import database.Table;
 import database.TableFactory;
+import database.contract.Query;
 import database.contract.QueryExecutor;
 import database.exception.TableAlreadyExistsException;
 import database.io.IOFacilityFactory;
@@ -46,6 +47,11 @@ public class CreateTableQueryExecutor implements QueryExecutor<Void, CreateTable
         randomAccessFile.close();
 
         return null;
+    }
+
+    @Override
+    public boolean executes(Query query) {
+        return query instanceof CreateTableQuery;
     }
 
     public void createFiles(Table table) throws IOException, TableAlreadyExistsException {

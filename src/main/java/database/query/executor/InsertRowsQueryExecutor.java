@@ -8,6 +8,7 @@ import database.DataType;
 import database.ExternalRow;
 import database.Table;
 import database.TableFactory;
+import database.contract.Query;
 import database.contract.QueryExecutor;
 import database.contract.ValueHolder;
 import database.exception.BadQueryException;
@@ -105,5 +106,10 @@ public class InsertRowsQueryExecutor implements QueryExecutor<Void, InsertRowsQu
 
         writer.flush();
         writer.close();
+    }
+
+    @Override
+    public boolean executes(Query query) {
+        return query instanceof InsertRowsQuery;
     }
 }

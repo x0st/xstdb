@@ -9,6 +9,7 @@ import database.SelectRowsQueryOutput;
 import database.Table;
 import database.TableFactory;
 import database.Value;
+import database.contract.Query;
 import database.contract.QueryExecutor;
 import database.exception.ExpressionSyntaxException;
 import database.exception.TokenizationException;
@@ -49,11 +50,6 @@ public class SelectRowsQueryExecutor implements QueryExecutor<SelectRowsQueryOut
         tableScheme = mDescribeTableQueryExecutor.execute(new DescribeTableQuery(query.getTableName()));
 
         rowSize = calculateRowSize(tableScheme.getColumns());
-
-//        if (query.hasPredicate()) {
-//            return withPredicate(query, reader, tableScheme);
-//        } else {
-//        }
 
         return select(query, reader, tableScheme, rowSize);
     }
@@ -177,5 +173,10 @@ public class SelectRowsQueryExecutor implements QueryExecutor<SelectRowsQueryOut
         }
 
         return new SelectRowsQueryOutput(columns, result);
+    }
+
+    @Override
+    public boolean executes(Query query) {
+        return query instanceof SelectRowsQuery;
     }
 }

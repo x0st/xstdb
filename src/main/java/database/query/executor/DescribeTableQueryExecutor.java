@@ -5,6 +5,7 @@ import java.io.IOException;
 import database.DataType;
 import database.Table;
 import database.TableFactory;
+import database.contract.Query;
 import database.contract.QueryExecutor;
 import database.io.IOFacilityFactory;
 import database.query.entity.DescribeTableQuery;
@@ -42,5 +43,10 @@ public class DescribeTableQueryExecutor implements QueryExecutor<TableScheme, De
         reader.close();
 
         return new TableScheme(tableName, rowsCount, columns);
+    }
+
+    @Override
+    public boolean executes(Query query) {
+        return query instanceof DescribeTableQuery;
     }
 }

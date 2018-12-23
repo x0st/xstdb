@@ -1,7 +1,6 @@
 package database.query.entity;
 
 import database.contract.HasTableName;
-import database.contract.PlaceholderMap;
 import database.contract.Query;
 import database.query.expression.PlaceholderObject;
 

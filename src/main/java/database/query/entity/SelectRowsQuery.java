@@ -16,7 +16,7 @@ public class SelectRowsQuery implements Query, HasTableName {
     }
 
     public boolean hasPredicate() {
-        return expression.length() != 0;
+        return expression != null && expression.length() != 0;
     }
 
     public String getTableName() {

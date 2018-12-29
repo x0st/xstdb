@@ -5,11 +5,11 @@ import java.util.Iterator;
 import java.util.List;
 
 import database.DataType;
-import database.ExternalRow;
 import database.Table;
 import database.TableFactory;
 import database.contract.Query;
 import database.contract.QueryExecutor;
+import database.contract.Record;
 import database.contract.ValueHolder;
 import database.exception.BadQueryException;
 import database.io.IOFacilityFactory;
@@ -82,8 +82,8 @@ public class InsertRowsQueryExecutor implements QueryExecutor<Void, InsertRowsQu
         Writer writer;
         ValueHolder cellValue;
         ColumnScheme[] columns;
-        ExternalRow externalRow;
-        Iterator<ExternalRow> rowsIterator;
+        Record externalRow;
+        Iterator<Record> rowsIterator;
 
         writer = mIOFacilityFactory.writer(table.getDataFile());
         columns = tableScheme.getColumns();

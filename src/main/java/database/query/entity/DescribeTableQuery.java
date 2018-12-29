@@ -10,6 +10,10 @@ public class DescribeTableQuery implements Query, HasTableName {
         tableName = table;
     }
 
+    public DescribeTableQuery(char[] table) {
+        tableName = String.valueOf(table);
+    }
+
     public String getTableName() {
         return tableName;
     }

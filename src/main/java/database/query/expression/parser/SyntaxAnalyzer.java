@@ -3,10 +3,10 @@ package database.query.expression.parser;
 import database.exception.ExpressionSyntaxException;
 import database.exception.TokenizationException;
 
-import static database.query.expression.Token.Type.COLUMN;
-import static database.query.expression.Token.Type.LOGICAL_OPERATOR;
-import static database.query.expression.Token.Type.MATH_OPERATOR;
-import static database.query.expression.Token.Type.PLACEHOLDER;
+import static database.query.expression.parser.Token.Type.COLUMN;
+import static database.query.expression.parser.Token.Type.LOGICAL_OPERATOR;
+import static database.query.expression.parser.Token.Type.MATH_OPERATOR;
+import static database.query.expression.parser.Token.Type.PLACEHOLDER;
 
 public class SyntaxAnalyzer {
     private final Lexer mLexer;

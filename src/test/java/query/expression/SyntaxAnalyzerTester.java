@@ -8,10 +8,10 @@ import database.query.expression.parser.ASTNode;
 import database.query.expression.parser.Lexer;
 import database.query.expression.parser.SyntaxAnalyzer;
 
-import static database.query.expression.Token.Type.MATH_OPERATOR;
-import static database.query.expression.Token.Type.LOGICAL_OPERATOR;
-import static database.query.expression.Token.Type.COLUMN;
-import static database.query.expression.Token.Type.PLACEHOLDER;
+import static database.query.expression.parser.Token.Type.MATH_OPERATOR;
+import static database.query.expression.parser.Token.Type.LOGICAL_OPERATOR;
+import static database.query.expression.parser.Token.Type.COLUMN;
+import static database.query.expression.parser.Token.Type.PLACEHOLDER;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;

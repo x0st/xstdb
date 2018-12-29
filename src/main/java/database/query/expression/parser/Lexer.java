@@ -2,101 +2,19 @@ package database.query.expression.parser;
 
 import database.exception.TokenizationException;
 
-import static database.query.expression.Token.Type.*;
+import static database.query.expression.parser.Token.Type.*;
 
-public class Lexer {
-    private char[] input;
+public class Lexer extends database.Lexer {
 
     private static final short BUFFER_SIZE = 21;
 
-    private char[] buffer = new char[BUFFER_SIZE];
-
-    private short bufferSize = 0;
-
-    private byte token = -1;
-
-    private short inputPointer = 0;
-
-    private int nextChar = -1;
-    private int prevChar = -1;
-    private int currChar = -1;
-
     public Lexer(char[] is) {
         input = is;
+        buffer = new char[bufferCapacity()];
     }
 
     public Lexer() {
-        input = new char[0];
-    }
-
-    public char[] getInput() {
-        return input;
-    }
-
-    public void setInput(char[] val) {
-        input = val;
-
-        nextChar = -1;
-        prevChar = -1;
-        currChar = -1;
-
-        inputPointer = 0;
-
-        bufferSize = 0;
-    }
-
-    private void scan() {
-        prevChar = currChar;
-        currChar = readInput();
-        nextChar = lookAhead();
-    }
-
-    private int readInput() {
-        if (input.length > inputPointer) {
-            return input[inputPointer++];
-        } else {
-            return -1;
-        }
-    }
-
-    private int lookAhead() {
-        if (input.length > inputPointer) {
-            return input[inputPointer];
-        } else {
-            return -1;
-        }
-    }
-
-    private boolean isLogicalOperator(int chr) {
-        return chr == '|' || chr == '&';
-    }
-
-    private boolean isMathOperator(int chr) {
-        return chr == '=' || chr == '>' || chr == '<';
-    }
-
-    private boolean isColon(int chr) {
-        return chr == ':';
-    }
-
-    private boolean isLetter(int chr) {
-        return chr >= 'a' && chr <= 'z';
-    }
-
-    private boolean isSpace(int chr) {
-        return chr == ' ';
-    }
-
-    public char[] lexeme() {
-        char[] _buff = new char[bufferSize];
-
-        System.arraycopy(buffer, 0, _buff, 0, bufferSize);
-
-        return _buff;
-    }
-
-    public byte token() {
-        return token;
+        this(new char[0]);
     }
 
     public boolean next() throws TokenizationException {
@@ -153,5 +71,10 @@ public class Lexer {
         bufferSize = 0;
 
         return false;
+    }
+
+    @Override
+    protected int bufferCapacity() {
+        return BUFFER_SIZE;
     }
 }

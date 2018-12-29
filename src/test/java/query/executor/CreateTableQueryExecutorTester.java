@@ -51,11 +51,11 @@ public class CreateTableQueryExecutorTester {
         TableFactory tableFactory;
         RAF raf;
 
-        String tableName;
+        char[] tableName;
 
         ColumnScheme[] columnSchemes = new ColumnScheme[2];
 
-        tableName = "test_table";
+        tableName = "test_table".toCharArray();
 
         raf = mock(RAF.class);
         tableFactory = mockTableFactory(false);
@@ -81,11 +81,11 @@ public class CreateTableQueryExecutorTester {
         InOrder inOrder;
         RAF raf;
 
-        String tableName;
+        char[] tableName;
 
         ColumnScheme[] columnSchemes = new ColumnScheme[2];
 
-        tableName = "test_table";
+        tableName = "test_table".toCharArray();
 
         raf = mock(RAF.class);
         tableFactory = mockTableFactory(true);
@@ -104,7 +104,7 @@ public class CreateTableQueryExecutorTester {
 
         inOrder.verify(raf).writeShort(eq((short)0));
         inOrder.verify(raf).writeInteger(eq(0));
-        inOrder.verify(raf).writeCharSequence(eq(tableName.toCharArray()));
+        inOrder.verify(raf).writeCharSequence(eq(tableName));
         inOrder.verify(raf).writeByte(eq((byte)columnSchemes.length));
 
         for (ColumnScheme columnScheme : columnSchemes) {

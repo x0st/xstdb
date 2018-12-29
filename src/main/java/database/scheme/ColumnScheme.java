@@ -39,4 +39,31 @@ public class ColumnScheme {
     public int getNameHash() {
         return mNameHash;
     }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+        private char[] name;
+        private DataType dataType;
+
+        public Builder name(char[] value) {
+            name = value;
+            return this;
+        }
+
+        public Builder dataType(DataType value) {
+            dataType = value;
+            return this;
+        }
+
+        public ColumnScheme build() {
+            if (name == null || dataType == null) {
+                throw new RuntimeException();
+            }
+
+            return new ColumnScheme(name, dataType);
+        }
+    }
 }

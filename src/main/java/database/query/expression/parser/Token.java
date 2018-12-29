@@ -1,4 +1,4 @@
-package database.query.expression;
+package database.query.expression.parser;
 
 abstract public class Token {
     abstract public class Type {

@@ -11,20 +11,13 @@ import dagger.Module;
 import dagger.Provides;
 import database.FileFactory;
 import database.TableFactory;
-import database.contract.Query;
 import database.contract.QueryExecutor;
-import database.contract.QueryTransformer;
 import database.io.IOFacilityFactory;
-import database.query.Parser;
-import database.query.entity.InsertRowsQuery;
 import database.query.executor.CreateTableQueryExecutor;
 import database.query.executor.DescribeTableQueryExecutor;
 import database.query.executor.InsertRowsQueryExecutor;
 import database.query.executor.SelectRowsQueryExecutor;
-import database.query.transformer.CreateTableQueryTransformer;
-import database.query.transformer.DescribeTableQueryTransformer;
-import database.query.transformer.InsertRowsQueryTransformer;
-import database.query.transformer.SelectRowsQueryTransformer;
+
 
 @Module
 public class AppModule {
@@ -32,12 +25,6 @@ public class AppModule {
 
     public AppModule(Properties properties) {
         mProperties = properties;
-    }
-
-    @Singleton
-    @Provides
-    Parser provideParser() {
-        return new Parser();
     }
 
     @Singleton
@@ -67,25 +54,6 @@ public class AppModule {
         poolOfExecutors.add(selectRowsQueryExecutor);
 
         return poolOfExecutors;
-    }
-
-    @Singleton
-    @Provides
-    List<QueryTransformer> providePoolOfQueryTransformers() {
-        List<QueryTransformer> poolOfTransformers = new ArrayList<>(4);
-
-        poolOfTransformers.add(new CreateTableQueryTransformer());
-        poolOfTransformers.add(new DescribeTableQueryTransformer());
-        poolOfTransformers.add(new InsertRowsQueryTransformer());
-        poolOfTransformers.add(new SelectRowsQueryTransformer());
-
-        return poolOfTransformers;
-    }
-
-    @Singleton
-    @Provides
-    CreateTableQueryTransformer provideCreateTableQueryTransformer() {
-        return new CreateTableQueryTransformer();
     }
 
     @Singleton

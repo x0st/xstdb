@@ -5,7 +5,6 @@ import java.util.Arrays;
 import database.Row;
 import database.contract.ValueHolder;
 import database.query.expression.PlaceholderObject;
-import database.query.expression.Token;
 import database.scheme.ColumnScheme;
 
 public class Evaluator {

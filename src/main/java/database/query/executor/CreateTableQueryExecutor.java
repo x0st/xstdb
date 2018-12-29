@@ -6,7 +6,7 @@ import database.Table;
 import database.TableFactory;
 import database.contract.Query;
 import database.contract.QueryExecutor;
-import database.exception.TableAlreadyExistsException;
+import database.exception.BadQueryException;
 import database.io.IOFacilityFactory;
 import database.io.RAF;
 
@@ -22,7 +22,7 @@ public class CreateTableQueryExecutor implements QueryExecutor<Void, CreateTable
         mTableFactory = factory;
     }
 
-    public Void execute(CreateTableQuery query) throws IOException, TableAlreadyExistsException {
+    public Void execute(CreateTableQuery query) throws IOException, BadQueryException {
         Table table = mTableFactory.make(query);
 
         createFiles(table);
@@ -54,9 +54,9 @@ public class CreateTableQueryExecutor implements QueryExecutor<Void, CreateTable
         return query instanceof CreateTableQuery;
     }
 
-    public void createFiles(Table table) throws IOException, TableAlreadyExistsException {
+    public void createFiles(Table table) throws IOException, BadQueryException {
         if (!table.getDefinitionFile().createNewFile() || !table.getDataFile().createNewFile()) {
-            throw new TableAlreadyExistsException("A table with this name already exists.");
+            throw BadQueryException.tableExists();
         }
     }
 }

@@ -1,9 +1,5 @@
 package database;
 
-import org.everit.json.schema.ValidationException;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
@@ -18,19 +14,23 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Properties;
-import java.util.logging.Logger;
 
 import javax.inject.Inject;
 
 import database.contract.Query;
 import database.contract.QueryExecutor;
+import database.contract.QueryMaker;
 import database.dagger.AppComponent;
 import database.dagger.AppModule;
 import database.dagger.DaggerAppComponent;
 import database.exception.BadQueryException;
+import database.query.QueryIdentifier;
+import database.query.parser.Lexer;
 
 public class Engine {
     @Inject List<QueryExecutor> mExecutorList;
+    @Inject List<QueryMaker> mQueryMakerList;
+    @Inject QueryIdentifier mQueryIdentifier;
 
     private final Properties mProperties;
 
@@ -46,16 +46,17 @@ public class Engine {
         app.inject(this);
     }
 
-    private Query query(String str) throws ValidationException, JSONException {
+    private Query query(String str) throws BadQueryException {
+        Lexer lexer = new Lexer(str.toCharArray());
+        QueryType qt = mQueryIdentifier.identify(lexer);
 
+        for (QueryMaker queryMaker : mQueryMakerList) {
+            if (queryMaker.supports(qt)) {
+                return queryMaker.make(lexer);
+            }
+        }
 
-        return null;
-    }
-
-    private String response(Query query, Object res) {
-
-
-        return null;
+        throw BadQueryException.badSyntax();
     }
 
     private Object execute(Query query) throws BadQueryException, IOException {
@@ -65,42 +66,59 @@ public class Engine {
             }
         }
 
-        return null;
+        throw new RuntimeException();
     }
 
     void startServer() {
-        try (ServerSocket ss = new ServerSocket(Integer.parseInt(mProperties.getProperty("port")))) {
-            while (true) {
-                try (Socket socket = ss.accept()) {
-                    BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        Query query;
+        Socket socket;
+        ServerSocket server;
+        long time;
 
-                    while (true) {
-                        String input = bufferedReader.readLine();
+        try {
+            server = new ServerSocket(Integer.parseInt(mProperties.getProperty("port")));
 
-                        if (input.equals("exit")) {
-                            socket.close();
-                            break;
+            try {
+                while (true) {
+                    socket = server.accept();
+
+                    try {
+                        BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+                        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+                        while (true) {
+                            String input = bufferedReader.readLine();
+
+                            if (input.equals("exit")) {
+                                socket.close();
+                                break;
+                            }
+
+                            try {
+                                time = System.currentTimeMillis();
+
+                                query = query(input);
+                                execute(query);
+
+                                bufferedWriter.write(
+                                        String.format("\nDone in %sms\n\n", System.currentTimeMillis() - time)
+                                );
+                            } catch (BadQueryException e) {
+                                bufferedWriter.write(
+                                        String.format("\nERROR: %s\n\n", e.getMessage())
+                                );
+                            } catch (IOException e) {
+                                bufferedWriter.write("\nInternal error\n\n");
+                            } finally {
+                                bufferedWriter.flush();
+                            }
                         }
-
-                        try {
-                            Query query = query(input);
-                            Object result = execute(query);
-                            String response = response(query, result);
-
-                            bufferedWriter.write(response);
-                            bufferedWriter.write("\n");
-                        } catch (ValidationException | JSONException e) {
-                            bufferedWriter.write("BAD QUERY SYNTAX\n");
-                        } catch (BadQueryException e) {
-                            bufferedWriter.write("BAD QUERY\n");
-                        } catch (IOException e) {
-                            bufferedWriter.write("ERROR ACCOMPLISHING QUERY\n");
-                        } finally {
-                            bufferedWriter.flush();
-                        }
+                    } finally {
+                        socket.close();
                     }
                 }
+            } finally {
+                server.close();
             }
         } catch (IOException e) {
             e.printStackTrace();

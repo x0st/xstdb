@@ -5,6 +5,7 @@ import java.util.List;
 
 import database.Value;
 import database.contract.ValueHolder;
+import database.exception.BuilderException;
 
 public class PlaceholderObject {
     private final ValueHolder[] mValues;
@@ -56,9 +57,9 @@ public class PlaceholderObject {
             return this;
         }
 
-        public PlaceholderObject build() {
+        public PlaceholderObject build() throws BuilderException {
             if (placeholders.size() == 0 || placeholders.size() != values.size()) {
-                throw new RuntimeException();
+                throw new BuilderException();
             }
 
             PlaceholderObject po = new PlaceholderObject(placeholders.size());

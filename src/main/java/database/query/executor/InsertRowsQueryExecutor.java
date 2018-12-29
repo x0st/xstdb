@@ -1,15 +1,17 @@
 package database.query.executor;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
 import database.DataType;
-import database.ExternalRow;
 import database.Table;
 import database.TableFactory;
 import database.contract.Query;
 import database.contract.QueryExecutor;
+import database.contract.Record;
 import database.contract.ValueHolder;
 import database.exception.BadQueryException;
 import database.io.IOFacilityFactory;
@@ -33,6 +35,16 @@ public class InsertRowsQueryExecutor implements QueryExecutor<Void, InsertRowsQu
 
     @Override
     public Void execute(InsertRowsQuery query) throws BadQueryException, IOException {
+        try {
+            execute0(query);
+        } catch (FileNotFoundException e) {
+            throw BadQueryException.tableNotFound();
+        }
+
+        return null;
+    }
+
+    private void execute0(InsertRowsQuery query) throws BadQueryException, IOException {
         Table table;
         TableScheme tableScheme;
 
@@ -42,10 +54,8 @@ public class InsertRowsQueryExecutor implements QueryExecutor<Void, InsertRowsQu
         tableScheme = mDescribeTableQueryExecutor.execute(new DescribeTableQuery(query.getTableName()));
         columnOrderMap = makeColumnOrderMap(query, tableScheme);
 
-        insertRows(query, tableScheme, table, columnOrderMap);
+        performInsertion(query, tableScheme, table, columnOrderMap);
         updateRowsCount(tableScheme, table, query.getData().size());
-
-        return null;
     }
 
     private int[] makeColumnOrderMap(InsertRowsQuery query, TableScheme tableScheme) {
@@ -61,7 +71,7 @@ public class InsertRowsQueryExecutor implements QueryExecutor<Void, InsertRowsQu
 
         for (int i = 0; i < desiredColumnOrder.size(); i++) {
             for (int j = 0; j < columnSchemes.length; j++) {
-                if (desiredColumnOrder.get(i).hashCode() == columnSchemes[j].getNameHash()) {
+                if (Arrays.hashCode(desiredColumnOrder.get(i).toCharArray()) == columnSchemes[j].getNameHash()) {
                     map[j] = i;
                 }
             }
@@ -78,12 +88,12 @@ public class InsertRowsQueryExecutor implements QueryExecutor<Void, InsertRowsQu
         randomAccessFile.close();
     }
 
-    private void insertRows(InsertRowsQuery query, TableScheme tableScheme, Table table, int[] columnOrderMap) throws IOException {
+    private void performInsertion(InsertRowsQuery query, TableScheme tableScheme, Table table, int[] columnOrderMap) throws IOException {
         Writer writer;
         ValueHolder cellValue;
         ColumnScheme[] columns;
-        ExternalRow externalRow;
-        Iterator<ExternalRow> rowsIterator;
+        Record externalRow;
+        Iterator<Record> rowsIterator;
 
         writer = mIOFacilityFactory.writer(table.getDataFile());
         columns = tableScheme.getColumns();

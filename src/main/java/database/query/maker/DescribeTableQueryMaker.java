@@ -1,5 +1,6 @@
 package database.query.maker;
 
+import database.QueryType;
 import database.contract.LexerInterface;
 import database.contract.QueryMaker;
 import database.exception.BadQueryException;
@@ -10,5 +11,10 @@ public class DescribeTableQueryMaker extends BaseQueryMaker implements QueryMake
     @Override
     public DescribeTableQuery make(LexerInterface lexer) throws BadQueryException {
         return new DescribeTableQuery(takeTableName(lexer));
+    }
+
+    @Override
+    public boolean supports(QueryType queryType) {
+        return queryType == QueryType.SHOW;
     }
 }

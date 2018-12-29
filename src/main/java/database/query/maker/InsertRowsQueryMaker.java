@@ -4,11 +4,14 @@ import java.util.LinkedList;
 import java.util.List;
 
 import database.DataType;
-import database.ExternalRow;
+import database.QueryType;
+import database.Row;
 import database.Value;
 import database.contract.LexerInterface;
 import database.contract.QueryMaker;
+import database.contract.Record;
 import database.exception.BadQueryException;
+import database.exception.BuilderException;
 import database.query.entity.InsertRowsQuery;
 import database.query.parser.Lexer;
 import database.query.parser.Token;
@@ -28,11 +31,20 @@ public class InsertRowsQueryMaker extends BaseQueryMaker implements QueryMaker<I
             builder.row(takeRecord(lexer, columns.size()));
         }
 
-        return builder.build();
+        try {
+            return builder.build();
+        } catch (BuilderException e) {
+            throw BadQueryException.badSyntax();
+        }
     }
 
-    private ExternalRow takeRecord(LexerInterface lexer, int capacity) throws BadQueryException {
-        ExternalRow externalRow = new ExternalRow(capacity);
+    @Override
+    public boolean supports(QueryType queryType) {
+        return queryType == QueryType.PUT;
+    }
+
+    private Record takeRecord(LexerInterface lexer, int capacity) throws BadQueryException {
+        Record externalRow = new Row(capacity);
 
         assertToken(Token.LEFT_BRACKET, lexer);
 
@@ -40,13 +52,13 @@ public class InsertRowsQueryMaker extends BaseQueryMaker implements QueryMaker<I
             lexer.next();
 
             if (lexer.token() != Token.WORD && lexer.token() != Token.NUMBER && lexer.token() != Token.QUOTED_STRING) {
-                throw new BadQueryException("Bad syntax");
+                throw BadQueryException.badSyntax();
             }
 
             if (lexer.token() == Token.NUMBER) {
-                externalRow.add(new Value(((Lexer)lexer).lexemeAsInt(), DataType.INTEGER));
+                externalRow.set(i, new Value(((Lexer)lexer).lexemeAsInt(), DataType.INTEGER));
             } else {
-                externalRow.add(new Value(lexer.lexeme(), DataType.STRING));
+                externalRow.set(i, new Value(lexer.lexeme(), DataType.STRING));
             }
         }
 
@@ -70,7 +82,7 @@ public class InsertRowsQueryMaker extends BaseQueryMaker implements QueryMaker<I
             } else if (lexer.token() == Token.RIGHT_BRACKET) {
                 break;
             } else {
-                throw new BadQueryException("Bad syntax");
+                throw BadQueryException.badSyntax();
             }
         }
 

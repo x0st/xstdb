@@ -6,6 +6,7 @@ import java.util.List;
 
 import database.contract.HasTableName;
 import database.contract.Query;
+import database.exception.BuilderException;
 import database.scheme.ColumnScheme;
 import database.scheme.TableScheme;
 
@@ -30,7 +31,7 @@ public class CreateTableQuery implements Query, HasTableName {
     }
 
     public static class Builder {
-        private char[] table;
+        private char[] table = null;
         private List<ColumnScheme> columnSchemeList = new ArrayList<>(10);
 
         public Builder table(char[] value) {
@@ -43,9 +44,9 @@ public class CreateTableQuery implements Query, HasTableName {
             return this;
         }
 
-        public CreateTableQuery build() {
+        public CreateTableQuery build() throws BuilderException {
             if (table == null || columnSchemeList.size() == 0) {
-                throw new RuntimeException();
+                throw new BuilderException();
             }
 
             ColumnScheme[] columnSchemes = new ColumnScheme[columnSchemeList.size()];

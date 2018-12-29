@@ -163,7 +163,7 @@ public class Lexer implements LexerInterface {
 
     private void throwException() throws TokenizationException {
         throw new TokenizationException(
-                String.format("Cannot tokenize the database expression: %s", String.valueOf(input))
+                String.format("Illegal character at the position of %s", inputPointer-1)
         );
     }
 
@@ -292,7 +292,7 @@ public class Lexer implements LexerInterface {
                         token = Token.WORD;
                         lookingFor = -1;
                         return true;
-                    } else if (isSpace(currChar)) {
+                    } else if (isSpace(currChar) || currChar == -1) {
                         token = Token.WORD;
                         lookingFor = -1;
                         return true;

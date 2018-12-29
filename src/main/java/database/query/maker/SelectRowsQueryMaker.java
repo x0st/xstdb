@@ -1,10 +1,12 @@
 package database.query.maker;
 
 import database.DataType;
+import database.QueryType;
 import database.Value;
 import database.contract.LexerInterface;
 import database.contract.QueryMaker;
 import database.exception.BadQueryException;
+import database.exception.BuilderException;
 import database.query.entity.SelectRowsQuery;
 import database.query.expression.PlaceholderObject;
 import database.query.expression.parser.ASTNode;
@@ -26,6 +28,11 @@ public class SelectRowsQueryMaker extends BaseQueryMaker implements QueryMaker<S
         }
 
         return new SelectRowsQuery(tableName, object, astNode);
+    }
+
+    @Override
+    public boolean supports(QueryType queryType) {
+        return queryType == QueryType.GET;
     }
 
     private PlaceholderObject takePlaceholders(LexerInterface lexer) throws BadQueryException {
@@ -52,7 +59,7 @@ public class SelectRowsQueryMaker extends BaseQueryMaker implements QueryMaker<S
                     builder.value(new Value(lexer.lexeme(), DataType.STRING));
                     break;
                 default:
-                    throw new BadQueryException("Bad syntax");
+                    throw BadQueryException.badSyntax();
             }
 
             lexer.next();
@@ -62,7 +69,11 @@ public class SelectRowsQueryMaker extends BaseQueryMaker implements QueryMaker<S
             }
         }
 
-        return builder.build();
+        try {
+            return builder.build();
+        } catch (BuilderException e) {
+            throw BadQueryException.badSyntax();
+        }
     }
 
     private ASTNode takeExpression(LexerInterface lexer) throws BadQueryException {
@@ -81,7 +92,7 @@ public class SelectRowsQueryMaker extends BaseQueryMaker implements QueryMaker<S
             } else if (lexer.token() == Token.RIGHT_BRACKET) {
                 break;
             } else {
-                throw new BadQueryException("Bad syntax");
+                throw BadQueryException.badSyntax();
             }
         }
 

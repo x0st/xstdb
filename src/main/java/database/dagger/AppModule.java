@@ -12,11 +12,17 @@ import dagger.Provides;
 import database.FileFactory;
 import database.TableFactory;
 import database.contract.QueryExecutor;
+import database.contract.QueryMaker;
 import database.io.IOFacilityFactory;
+import database.query.QueryIdentifier;
 import database.query.executor.CreateTableQueryExecutor;
 import database.query.executor.DescribeTableQueryExecutor;
 import database.query.executor.InsertRowsQueryExecutor;
 import database.query.executor.SelectRowsQueryExecutor;
+import database.query.maker.CreateTableQueryMaker;
+import database.query.maker.DescribeTableQueryMaker;
+import database.query.maker.InsertRowsQueryMaker;
+import database.query.maker.SelectRowsQueryMaker;
 
 
 @Module
@@ -36,6 +42,25 @@ public class AppModule {
                     fileFactory
             );
         } catch (FileNotFoundException ignore) { return null; }
+    }
+
+    @Singleton
+    @Provides
+    QueryIdentifier provideQueryIdentifier() {
+        return new QueryIdentifier();
+    }
+
+    @Singleton
+    @Provides
+    List<QueryMaker> providePoolOfQueryMakers() {
+        List<QueryMaker> list = new ArrayList<>(4);
+
+        list.add(new CreateTableQueryMaker());
+        list.add(new InsertRowsQueryMaker());
+        list.add(new DescribeTableQueryMaker());
+        list.add(new SelectRowsQueryMaker());
+
+        return list;
     }
 
     @Singleton

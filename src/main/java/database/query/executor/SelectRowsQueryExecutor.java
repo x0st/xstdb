@@ -1,5 +1,6 @@
 package database.query.executor;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import database.DataType;
@@ -11,8 +12,6 @@ import database.TableFactory;
 import database.Value;
 import database.contract.Query;
 import database.contract.QueryExecutor;
-import database.exception.ExpressionSyntaxException;
-import database.exception.TokenizationException;
 import database.exception.BadQueryException;
 import database.io.IOFacilityFactory;
 import database.io.Util;
@@ -36,6 +35,14 @@ public class SelectRowsQueryExecutor implements QueryExecutor<SelectRowsQueryOut
 
     @Override
     public SelectRowsQueryOutput execute(SelectRowsQuery query) throws BadQueryException, IOException {
+        try {
+            return execute0(query);
+        } catch (FileNotFoundException e) {
+            throw BadQueryException.tableNotFound();
+        }
+    }
+
+    private SelectRowsQueryOutput execute0(SelectRowsQuery query) throws BadQueryException, IOException {
         int rowSize; // indicates how many bytes a row takes
 
         Table table;
@@ -67,7 +74,7 @@ public class SelectRowsQueryExecutor implements QueryExecutor<SelectRowsQueryOut
         return res;
     }
 
-    private SelectRowsQueryOutput select(SelectRowsQuery query, Reader reader, TableScheme tableScheme, int rowSize) throws IOException, TokenizationException, ExpressionSyntaxException {
+    private SelectRowsQueryOutput select(SelectRowsQuery query, Reader reader, TableScheme tableScheme, int rowSize) throws IOException {
         final int INTEGER_SIZE = DataType.INTEGER.getSize();
         final int STRING_SIZE = DataType.STRING.getSize();
 

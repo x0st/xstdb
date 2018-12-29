@@ -14,7 +14,7 @@ abstract public class BaseQueryMaker {
 
     protected void assertToken(byte expected, LexerInterface lexer) throws BadQueryException {
         if (lexer.token() != expected) {
-            throw new BadQueryException("Bad syntax");
+            throw BadQueryException.badSyntax();
         }
     }
 }

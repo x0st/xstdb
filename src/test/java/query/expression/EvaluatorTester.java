@@ -11,10 +11,10 @@ import database.query.expression.parser.ASTNode;
 import database.query.expression.parser.Evaluator;
 import database.scheme.ColumnScheme;
 
-import static database.query.expression.parser.Token.Type.COLUMN;
-import static database.query.expression.parser.Token.Type.PLACEHOLDER;
-import static database.query.expression.parser.Token.Type.MATH_OPERATOR;
-import static database.query.expression.parser.Token.Type.LOGICAL_OPERATOR;
+import static database.query.parser.Token.WORD;
+import static database.query.parser.Token.PLACEHOLDER;
+import static database.query.parser.Token.MATH_OPERATOR;
+import static database.query.parser.Token.LOGICAL_OPERATOR;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -40,7 +40,7 @@ public class EvaluatorTester {
         placeholderMap.set(":n", new Value(5, DataType.INTEGER));
 
         astNode = ast(MATH_OPERATOR, "=")
-                .setLeft(ast(COLUMN, "n"))
+                .setLeft(ast(WORD, "n"))
                 .setRight(ast(PLACEHOLDER, ":n"));
 
         columnSchemes[0] = new ColumnScheme("n".toCharArray(), DataType.INTEGER);
@@ -57,7 +57,7 @@ public class EvaluatorTester {
         placeholderMap.set(":n", new Value(5, DataType.INTEGER));
 
         astNode = ast(MATH_OPERATOR, "=")
-                .setLeft(ast(COLUMN, "n"))
+                .setLeft(ast(WORD, "n"))
                 .setRight(ast(PLACEHOLDER, ":n"));
 
         columnSchemes[0] = new ColumnScheme("n".toCharArray(), DataType.INTEGER);
@@ -74,7 +74,7 @@ public class EvaluatorTester {
         placeholderMap.set(":n", new Value(5, DataType.INTEGER));
 
         astNode = ast(MATH_OPERATOR, ">")
-                .setLeft(ast(COLUMN, "n"))
+                .setLeft(ast(WORD, "n"))
                 .setRight(ast(PLACEHOLDER, ":n"));
 
         columnSchemes[0] = new ColumnScheme("n".toCharArray(), DataType.INTEGER);
@@ -92,7 +92,7 @@ public class EvaluatorTester {
         placeholderMap.set(":n", new Value(5, DataType.INTEGER));
 
         astNode = ast(MATH_OPERATOR, "<")
-                .setLeft(ast(COLUMN, "n"))
+                .setLeft(ast(WORD, "n"))
                 .setRight(ast(PLACEHOLDER, ":n"));
 
         columnSchemes[0] = new ColumnScheme("n".toCharArray(), DataType.INTEGER);
@@ -114,12 +114,12 @@ public class EvaluatorTester {
         astNode = ast(LOGICAL_OPERATOR, "&")
                 .setLeft(
                         ast(MATH_OPERATOR, "<")
-                        .setLeft(ast(COLUMN, "n"))
+                        .setLeft(ast(WORD, "n"))
                         .setRight(ast(PLACEHOLDER, ":n"))
                 )
                 .setRight(
                         ast(MATH_OPERATOR, "=")
-                        .setLeft(ast(COLUMN, "id"))
+                        .setLeft(ast(WORD, "id"))
                         .setRight(ast(PLACEHOLDER, ":id"))
                 );
 
@@ -144,12 +144,12 @@ public class EvaluatorTester {
         astNode = ast(LOGICAL_OPERATOR, "|")
                 .setLeft(
                         ast(MATH_OPERATOR, "<")
-                                .setLeft(ast(COLUMN, "n"))
+                                .setLeft(ast(WORD, "n"))
                                 .setRight(ast(PLACEHOLDER, ":n"))
                 )
                 .setRight(
                         ast(MATH_OPERATOR, "=")
-                                .setLeft(ast(COLUMN, "id"))
+                                .setLeft(ast(WORD, "id"))
                                 .setRight(ast(PLACEHOLDER, ":id"))
                 );
 
@@ -173,12 +173,12 @@ public class EvaluatorTester {
         astNode = ast(LOGICAL_OPERATOR, "|")
                 .setLeft(
                         ast(MATH_OPERATOR, "=")
-                        .setLeft(ast(COLUMN, "n"))
+                        .setLeft(ast(WORD, "n"))
                         .setRight(ast(PLACEHOLDER, ":n"))
                 )
                 .setRight(
                         ast(MATH_OPERATOR, "=")
-                        .setLeft(ast(COLUMN, "name"))
+                        .setLeft(ast(WORD, "name"))
                         .setRight(ast(PLACEHOLDER, ":name"))
                 );
 
@@ -202,12 +202,12 @@ public class EvaluatorTester {
         astNode = ast(LOGICAL_OPERATOR, "&")
                 .setLeft(
                         ast(MATH_OPERATOR, "<")
-                        .setLeft(ast(COLUMN, "n"))
+                        .setLeft(ast(WORD, "n"))
                         .setRight(ast(PLACEHOLDER, ":n"))
                 )
                 .setRight(
                         ast(MATH_OPERATOR, "=")
-                        .setLeft(ast(COLUMN, "name"))
+                        .setLeft(ast(WORD, "name"))
                         .setRight(ast(PLACEHOLDER, ":name"))
                 );
 
@@ -235,18 +235,18 @@ public class EvaluatorTester {
                         ast(LOGICAL_OPERATOR, "|")
                         .setLeft(
                                 ast(MATH_OPERATOR, "<")
-                                .setLeft(ast(COLUMN, "n"))
+                                .setLeft(ast(WORD, "n"))
                                 .setRight(ast(PLACEHOLDER, ":n"))
                         )
                         .setRight(
                                 ast(MATH_OPERATOR, "=")
-                                .setLeft(ast(COLUMN, "name"))
+                                .setLeft(ast(WORD, "name"))
                                 .setRight(ast(PLACEHOLDER, ":name"))
                         )
                     )
                     .setRight(
                             ast(MATH_OPERATOR, ">")
-                            .setLeft(ast(COLUMN, "age"))
+                            .setLeft(ast(WORD, "age"))
                             .setRight(ast(PLACEHOLDER, ":age"))
                     );
 

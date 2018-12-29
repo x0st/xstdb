@@ -3,6 +3,7 @@ package database.scheme;
 import java.util.Arrays;
 
 import database.DataType;
+import database.exception.BuilderException;
 
 public class ColumnScheme {
     private char[] mName;
@@ -38,5 +39,32 @@ public class ColumnScheme {
 
     public int getNameHash() {
         return mNameHash;
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+        private char[] name = null;
+        private DataType dataType = null;
+
+        public Builder name(char[] value) {
+            name = value;
+            return this;
+        }
+
+        public Builder dataType(DataType value) {
+            dataType = value;
+            return this;
+        }
+
+        public ColumnScheme build() throws BuilderException {
+            if (name == null || dataType == null) {
+                throw new BuilderException();
+            }
+
+            return new ColumnScheme(name, dataType);
+        }
     }
 }

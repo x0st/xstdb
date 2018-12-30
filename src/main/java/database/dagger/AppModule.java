@@ -11,20 +11,19 @@ import dagger.Module;
 import dagger.Provides;
 import database.FileFactory;
 import database.TableFactory;
-import database.contract.Query;
 import database.contract.QueryExecutor;
-import database.contract.QueryTransformer;
+import database.contract.QueryMaker;
 import database.io.IOFacilityFactory;
-import database.query.Parser;
-import database.query.entity.InsertRowsQuery;
+import database.query.QueryIdentifier;
 import database.query.executor.CreateTableQueryExecutor;
 import database.query.executor.DescribeTableQueryExecutor;
 import database.query.executor.InsertRowsQueryExecutor;
 import database.query.executor.SelectRowsQueryExecutor;
-import database.query.transformer.CreateTableQueryTransformer;
-import database.query.transformer.DescribeTableQueryTransformer;
-import database.query.transformer.InsertRowsQueryTransformer;
-import database.query.transformer.SelectRowsQueryTransformer;
+import database.query.maker.CreateTableQueryMaker;
+import database.query.maker.DescribeTableQueryMaker;
+import database.query.maker.InsertRowsQueryMaker;
+import database.query.maker.SelectRowsQueryMaker;
+
 
 @Module
 public class AppModule {
@@ -36,12 +35,6 @@ public class AppModule {
 
     @Singleton
     @Provides
-    Parser provideParser() {
-        return new Parser();
-    }
-
-    @Singleton
-    @Provides
     TableFactory provideTableFactory(FileFactory fileFactory) {
         try {
             return new TableFactory(
@@ -49,6 +42,25 @@ public class AppModule {
                     fileFactory
             );
         } catch (FileNotFoundException ignore) { return null; }
+    }
+
+    @Singleton
+    @Provides
+    QueryIdentifier provideQueryIdentifier() {
+        return new QueryIdentifier();
+    }
+
+    @Singleton
+    @Provides
+    List<QueryMaker> providePoolOfQueryMakers() {
+        List<QueryMaker> list = new ArrayList<>(4);
+
+        list.add(new CreateTableQueryMaker());
+        list.add(new InsertRowsQueryMaker());
+        list.add(new DescribeTableQueryMaker());
+        list.add(new SelectRowsQueryMaker());
+
+        return list;
     }
 
     @Singleton
@@ -67,25 +79,6 @@ public class AppModule {
         poolOfExecutors.add(selectRowsQueryExecutor);
 
         return poolOfExecutors;
-    }
-
-    @Singleton
-    @Provides
-    List<QueryTransformer> providePoolOfQueryTransformers() {
-        List<QueryTransformer> poolOfTransformers = new ArrayList<>(4);
-
-        poolOfTransformers.add(new CreateTableQueryTransformer());
-        poolOfTransformers.add(new DescribeTableQueryTransformer());
-        poolOfTransformers.add(new InsertRowsQueryTransformer());
-        poolOfTransformers.add(new SelectRowsQueryTransformer());
-
-        return poolOfTransformers;
-    }
-
-    @Singleton
-    @Provides
-    CreateTableQueryTransformer provideCreateTableQueryTransformer() {
-        return new CreateTableQueryTransformer();
     }
 
     @Singleton

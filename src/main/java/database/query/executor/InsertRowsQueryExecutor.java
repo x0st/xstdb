@@ -54,7 +54,7 @@ public class InsertRowsQueryExecutor implements QueryExecutor<Void, InsertRowsQu
         tableScheme = mDescribeTableQueryExecutor.execute(new DescribeTableQuery(query.getTableName()));
         columnOrderMap = makeColumnOrderMap(query, tableScheme);
 
-        insertRows(query, tableScheme, table, columnOrderMap);
+        performInsertion(query, tableScheme, table, columnOrderMap);
         updateRowsCount(tableScheme, table, query.getData().size());
     }
 
@@ -88,7 +88,7 @@ public class InsertRowsQueryExecutor implements QueryExecutor<Void, InsertRowsQu
         randomAccessFile.close();
     }
 
-    private void insertRows(InsertRowsQuery query, TableScheme tableScheme, Table table, int[] columnOrderMap) throws IOException {
+    private void performInsertion(InsertRowsQuery query, TableScheme tableScheme, Table table, int[] columnOrderMap) throws IOException {
         Writer writer;
         ValueHolder cellValue;
         ColumnScheme[] columns;

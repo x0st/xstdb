@@ -2,13 +2,14 @@ package database;
 
 import java.util.LinkedList;
 
+import database.contract.Record;
 import database.scheme.ColumnScheme;
 
 public class SelectRowsQueryOutput {
     private final ColumnScheme[] mColumnSchemes;
-    private final LinkedList<Row> mRecords;
+    private final LinkedList<Record> mRecords;
 
-    public SelectRowsQueryOutput(ColumnScheme[] columnSchemes, LinkedList<Row> records) {
+    public SelectRowsQueryOutput(ColumnScheme[] columnSchemes, LinkedList<Record> records) {
         mColumnSchemes = columnSchemes;
         mRecords = records;
     }
@@ -17,7 +18,7 @@ public class SelectRowsQueryOutput {
         return mColumnSchemes;
     }
 
-    public LinkedList<Row> getRecords() {
+    public LinkedList<Record> getRecords() {
         return mRecords;
     }
 }

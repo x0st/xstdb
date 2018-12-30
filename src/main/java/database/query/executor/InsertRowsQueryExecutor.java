@@ -1,5 +1,6 @@
 package database.query.executor;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
@@ -33,6 +34,16 @@ public class InsertRowsQueryExecutor implements QueryExecutor<Void, InsertRowsQu
 
     @Override
     public Void execute(InsertRowsQuery query) throws BadQueryException, IOException {
+        try {
+            execute0(query);
+        } catch (FileNotFoundException e) {
+            throw BadQueryException.tableNotFound();
+        }
+
+        return null;
+    }
+
+    private void execute0(InsertRowsQuery query) throws BadQueryException, IOException {
         Table table;
         TableScheme tableScheme;
 
@@ -44,8 +55,6 @@ public class InsertRowsQueryExecutor implements QueryExecutor<Void, InsertRowsQu
 
         insertRows(query, tableScheme, table, columnOrderMap);
         updateRowsCount(tableScheme, table, query.getData().size());
-
-        return null;
     }
 
     private int[] makeColumnOrderMap(InsertRowsQuery query, TableScheme tableScheme) {

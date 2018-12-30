@@ -12,15 +12,11 @@ import database.TableFactory;
 import database.Value;
 import database.contract.Query;
 import database.contract.QueryExecutor;
-import database.exception.ExpressionSyntaxException;
-import database.exception.TokenizationException;
+import database.contract.Record;
 import database.exception.BadQueryException;
 import database.io.IOFacilityFactory;
 import database.io.Util;
-import database.query.expression.parser.ASTNode;
 import database.query.expression.parser.Evaluator;
-import database.query.expression.parser.Lexer;
-import database.query.expression.parser.SyntaxAnalyzer;
 import database.query.entity.DescribeTableQuery;
 import database.query.entity.SelectRowsQuery;
 import database.scheme.ColumnScheme;
@@ -79,7 +75,7 @@ public class SelectRowsQueryExecutor implements QueryExecutor<SelectRowsQueryOut
         return res;
     }
 
-    private SelectRowsQueryOutput select(SelectRowsQuery query, Reader reader, TableScheme tableScheme, int rowSize) throws IOException, TokenizationException, ExpressionSyntaxException {
+    private SelectRowsQueryOutput select(SelectRowsQuery query, Reader reader, TableScheme tableScheme, int rowSize) throws IOException {
         final int INTEGER_SIZE = DataType.INTEGER.getSize();
         final int STRING_SIZE = DataType.STRING.getSize();
 
@@ -95,19 +91,13 @@ public class SelectRowsQueryExecutor implements QueryExecutor<SelectRowsQueryOut
         byte[] integerBuffer; // a buffer to place an integer
         byte[] stringBuffer; // a buffer to place a string
 
-        Lexer lexer;
-        ASTNode astNode;
         Evaluator evaluator;
-        SyntaxAnalyzer syntaxAnalyzer;
-        LinkedList<Row> result;
+        LinkedList<Record> result;
         ColumnScheme[] columns; // columns of table
-        Row row; // a representation of one record
+        Record row; // a representation of one record
 
         if (query.hasPredicate()) {
-            lexer = new Lexer(query.getExpression().toCharArray());
-            syntaxAnalyzer = new SyntaxAnalyzer(lexer);
-            astNode = syntaxAnalyzer.ast();
-            evaluator = new Evaluator(query.getAttributes(), tableScheme.getColumns(), astNode);
+            evaluator = new Evaluator(query.getAttributes(), tableScheme.getColumns(), query.getExpression());
         } else {
             evaluator = null;
         }
@@ -178,7 +168,6 @@ public class SelectRowsQueryExecutor implements QueryExecutor<SelectRowsQueryOut
             }
 
             bufferPointerPos = 0;
-
         }
 
         return new SelectRowsQueryOutput(columns, result);

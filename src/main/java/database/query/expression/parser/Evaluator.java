@@ -3,6 +3,7 @@ package database.query.expression.parser;
 import java.util.Arrays;
 
 import database.Row;
+import database.contract.Record;
 import database.contract.ValueHolder;
 import database.query.expression.PlaceholderObject;
 import database.query.parser.Token;
@@ -42,11 +43,11 @@ public class Evaluator {
         }
     }
 
-    public boolean evaluate(Row record) {
+    public boolean evaluate(Record record) {
         return evaluate0(mASTNode, record);
     }
 
-    private boolean evaluate0(ASTNode astNode, Row record) {
+    private boolean evaluate0(ASTNode astNode, Record record) {
         ValueHolder left;
         ValueHolder right;
 

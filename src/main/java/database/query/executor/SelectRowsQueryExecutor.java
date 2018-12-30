@@ -1,5 +1,6 @@
 package database.query.executor;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import database.DataType;
@@ -39,6 +40,14 @@ public class SelectRowsQueryExecutor implements QueryExecutor<SelectRowsQueryOut
 
     @Override
     public SelectRowsQueryOutput execute(SelectRowsQuery query) throws BadQueryException, IOException {
+        try {
+            return execute0(query);
+        } catch (FileNotFoundException e) {
+            throw BadQueryException.tableNotFound();
+        }
+    }
+
+    private SelectRowsQueryOutput execute0(SelectRowsQuery query) throws BadQueryException, IOException {
         int rowSize; // indicates how many bytes a row takes
 
         Table table;

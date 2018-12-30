@@ -1,5 +1,6 @@
 package database.query.executor;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import database.DataType;
@@ -7,6 +8,7 @@ import database.Table;
 import database.TableFactory;
 import database.contract.Query;
 import database.contract.QueryExecutor;
+import database.exception.BadQueryException;
 import database.io.IOFacilityFactory;
 import database.query.entity.DescribeTableQuery;
 import database.scheme.ColumnScheme;
@@ -22,7 +24,15 @@ public class DescribeTableQueryExecutor implements QueryExecutor<TableScheme, De
         mIOFacilityFactory = ioFacilityFactory;
     }
 
-    public TableScheme execute(DescribeTableQuery query) throws IOException {
+    public TableScheme execute(DescribeTableQuery query) throws IOException, BadQueryException {
+        try {
+            return execute0(query);
+        } catch (FileNotFoundException e) {
+            throw BadQueryException.tableNotFound();
+        }
+    }
+
+    private TableScheme execute0(DescribeTableQuery query) throws IOException {
         Table table = mTableFactory.make(query);
         Reader reader = mIOFacilityFactory.reader(table.getDefinitionFile());
 

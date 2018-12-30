@@ -28,14 +28,17 @@ public class Value implements ValueHolder {
         mHash = integerValue;
     }
 
+    @Override
     public char[] getCharArrayValue() {
         return mCharArrayValue;
     }
 
+    @Override
     public int getIntegerValue() {
         return mIntegerValue;
     }
 
+    @Override
     public DataType getDataType() {
         return mDataType;
     }

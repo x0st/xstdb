@@ -1,8 +1,8 @@
 package database;
 
 public enum DataType {
-    INTEGER (2, 4),
-    STRING  (1, 50);
+    INTEGER (1, 4),
+    STRING  (2, 50);
 
     private final int mType;
     private final int mSize;

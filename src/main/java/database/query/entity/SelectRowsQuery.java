@@ -3,31 +3,32 @@ package database.query.entity;
 import database.contract.HasTableName;
 import database.contract.Query;
 import database.query.expression.PlaceholderObject;
+import database.query.expression.parser.ASTNode;
 
 public class SelectRowsQuery implements Query, HasTableName {
-    private String tableName;
-    private String expression;
-    private PlaceholderObject attributes;
+    private String mTableName;
+    private ASTNode mExpression;
+    private PlaceholderObject mPlaceholders;
 
-    public SelectRowsQuery(String table, PlaceholderObject attributesMap, String expressionString) {
-        tableName = table;
-        attributes = attributesMap;
-        expression = expressionString;
+    public SelectRowsQuery(String table, PlaceholderObject placeholderObject, ASTNode exp) {
+        mTableName = table;
+        mPlaceholders = placeholderObject;
+        mExpression = exp;
     }
 
     public boolean hasPredicate() {
-        return expression != null && expression.length() != 0;
+        return mExpression != null;
     }
 
     public String getTableName() {
-        return tableName;
+        return mTableName;
     }
 
-    public String getExpression() {
-        return expression;
+    public ASTNode getExpression() {
+        return mExpression;
     }
 
     public PlaceholderObject getAttributes() {
-        return attributes;
+        return mPlaceholders;
     }
 }

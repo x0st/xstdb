@@ -2,6 +2,7 @@ package database.query.executor;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -70,7 +71,7 @@ public class InsertRowsQueryExecutor implements QueryExecutor<Void, InsertRowsQu
 
         for (int i = 0; i < desiredColumnOrder.size(); i++) {
             for (int j = 0; j < columnSchemes.length; j++) {
-                if (desiredColumnOrder.get(i).hashCode() == columnSchemes[j].getNameHash()) {
+                if (Arrays.hashCode(desiredColumnOrder.get(i).toCharArray()) == columnSchemes[j].getNameHash()) {
                     map[j] = i;
                 }
             }

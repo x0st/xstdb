@@ -1,4 +1,4 @@
-package database;
+package database.query;
 
 import java.io.File;
 import java.io.FileNotFoundException;

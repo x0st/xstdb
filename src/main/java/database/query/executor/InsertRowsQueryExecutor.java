@@ -7,8 +7,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import database.DataType;
-import database.Table;
-import database.TableFactory;
+import database.query.Table;
+import database.query.TableFactory;
 import database.contract.Query;
 import database.contract.QueryExecutor;
 import database.contract.Record;

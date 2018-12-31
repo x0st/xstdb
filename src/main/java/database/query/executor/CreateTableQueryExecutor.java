@@ -2,8 +2,8 @@ package database.query.executor;
 
 import java.io.IOException;
 
-import database.Table;
-import database.TableFactory;
+import database.query.Table;
+import database.query.TableFactory;
 import database.contract.Query;
 import database.contract.QueryExecutor;
 import database.exception.BadQueryException;

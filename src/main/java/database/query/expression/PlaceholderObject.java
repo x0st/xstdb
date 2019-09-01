@@ -57,9 +57,9 @@ public class PlaceholderObject {
             return this;
         }
 
-        public PlaceholderObject build() throws BuilderException {
+        public PlaceholderObject build() {
             if (placeholders.size() == 0 || placeholders.size() != values.size()) {
-                throw new BuilderException();
+                throw new RuntimeException();
             }
 
             PlaceholderObject po = new PlaceholderObject(placeholders.size());

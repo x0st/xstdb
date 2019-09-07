@@ -1,66 +1,73 @@
 package database.query.executor;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import database.DataType;
-import java.util.LinkedList;
 import database.Row;
-import database.query.SelectRowsQueryOutput;
-import database.query.Table;
-import database.query.TableFactory;
 import database.Value;
 import database.contract.Query;
 import database.contract.QueryExecutor;
 import database.contract.Record;
 import database.exception.BadQueryException;
 import database.io.IOFacilityFactory;
+import database.io.RAF;
+import database.io.Reader;
 import database.io.Util;
-import database.query.expression.parser.Evaluator;
+import database.query.Table;
+import database.query.TableFactory;
+import database.query.entity.DeleteRowsQuery;
 import database.query.entity.DescribeTableQuery;
-import database.query.entity.SelectRowsQuery;
+import database.query.expression.parser.Evaluator;
 import database.scheme.ColumnScheme;
 import database.scheme.TableScheme;
-import database.io.Reader;
 
-public class SelectRowsQueryExecutor implements QueryExecutor<SelectRowsQueryOutput, SelectRowsQuery> {
-    private final TableFactory mTableFactory;
-    private final QueryExecutor<TableScheme, DescribeTableQuery> mDescribeTableQueryExecutor;
-    private final IOFacilityFactory mIOFacilityFactory;
+public class DeleteRowsQueryExecutor implements QueryExecutor<Void, DeleteRowsQuery> {
+    private IOFacilityFactory mIOFacilityFactory;
+    private TableFactory mTableFactory;
+    private final QueryExecutor<TableScheme, DescribeTableQuery> mDescribeTableQueryQueryExecutor;
 
-    public SelectRowsQueryExecutor(IOFacilityFactory ioFacilityFactory, TableFactory factory, QueryExecutor<TableScheme, DescribeTableQuery> describeTableQueryExecutor) {
+    public DeleteRowsQueryExecutor(
+            TableFactory tableFactory,
+            IOFacilityFactory ioFacilityFactory,
+            QueryExecutor<TableScheme, DescribeTableQuery> describeTableQueryQueryExecutor
+    ) {
+        mTableFactory = tableFactory;
         mIOFacilityFactory = ioFacilityFactory;
-        mTableFactory = factory;
-        mDescribeTableQueryExecutor = describeTableQueryExecutor;
+        mDescribeTableQueryQueryExecutor = describeTableQueryQueryExecutor;
     }
 
     @Override
-    public SelectRowsQueryOutput execute(SelectRowsQuery query) throws BadQueryException, IOException {
+    public Void execute(DeleteRowsQuery query) throws BadQueryException, IOException {
         try {
-            return execute0(query);
-        } catch (FileNotFoundException e) {
-            throw BadQueryException.tableNotFound();
+            execute0(query);
+        } catch (Throwable e) {
+            throw BadQueryException.badSyntax();
         }
+
+        return null;
     }
 
-    private SelectRowsQueryOutput execute0(SelectRowsQuery query) throws BadQueryException, IOException {
+    private void execute0(DeleteRowsQuery query) throws IOException, BadQueryException {
+        RAF raf;
         Table table;
         Reader reader;
         TableScheme tableScheme;
 
         table = mTableFactory.make(query);
         reader = mIOFacilityFactory.reader(table.getDataFile());
-        tableScheme = mDescribeTableQueryExecutor.execute(new DescribeTableQuery(query.getTableName()));
+        tableScheme = mDescribeTableQueryQueryExecutor.execute(new DescribeTableQuery(query.getTableName()));
+        raf = mIOFacilityFactory.randomAccessFile(table.getDataFile());
 
-        return select(query, reader, tableScheme);
+        delete(query, reader, raf, tableScheme);
     }
 
-    private SelectRowsQueryOutput select(SelectRowsQuery query, Reader reader, TableScheme tableScheme) throws IOException {
+    private void delete(DeleteRowsQuery query, Reader reader, RAF raf, TableScheme tableScheme) throws IOException {
         // how many bytes an integer takes
         final int INTEGER_SIZE = DataType.INTEGER.getSize();
         // how many bytes a string takes
         final int STRING_SIZE = DataType.STRING.getSize();
 
+        int rowsRead; // the number of rows already read
         int rowSize; // the number of bytes one row takes
         int stringHashCode; // contains the has code of a string
         int stringLength; // indicates how many bytes a string takes
@@ -75,7 +82,6 @@ public class SelectRowsQueryExecutor implements QueryExecutor<SelectRowsQueryOut
         byte[] stringBuffer; // a temp buffer to place a string
 
         Evaluator evaluator; // will resolve the conditions (predicate)
-        LinkedList<Record> result; // will contain the found records
         ColumnScheme[] columns; // columns of table
         Record row; // a representation of one record
 
@@ -85,17 +91,17 @@ public class SelectRowsQueryExecutor implements QueryExecutor<SelectRowsQueryOut
             evaluator = null;
         }
 
+        rowsRead = 0;
         rowSize = tableScheme.getRowSize();
         bufferPointerPos = 0;
         integerBuffer = new byte[4];
         columnsCount = tableScheme.getColumns().length;
         rowsCount = tableScheme.getRowsCount();
-        rowsPerRead = 100;
+        rowsPerRead = 10;
         rowsPerRead = rowsCount < rowsPerRead ? rowsCount : rowsPerRead;
         bytesRead = 0;
         fileSize = rowsCount * rowSize;
         buffer = new byte[rowSize * rowsPerRead];
-        result = new LinkedList<>();
         columns = tableScheme.getColumns();
 
         while (bytesRead < fileSize) {
@@ -158,21 +164,24 @@ public class SelectRowsQueryExecutor implements QueryExecutor<SelectRowsQueryOut
 
                 if (evaluator != null) {
                     if (evaluator.evaluate(row)) {
-                        result.add(row);
+                        // move pointer to the
+                        raf.move(rowsRead * rowSize);
+                        raf.writeByte((byte)1);
                     }
                 } else {
-                    result.add(row);
+                    raf.move(rowsRead * rowSize);
+                    raf.writeByte((byte)1);
                 }
+
+                rowsRead +=1;
             }
 
             bufferPointerPos = 0;
         }
-
-        return new SelectRowsQueryOutput(columns, result);
     }
 
     @Override
     public boolean executes(Query query) {
-        return query instanceof SelectRowsQuery;
+        return query instanceof DeleteRowsQuery;
     }
 }

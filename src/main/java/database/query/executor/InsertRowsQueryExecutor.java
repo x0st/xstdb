@@ -102,6 +102,9 @@ public class InsertRowsQueryExecutor implements QueryExecutor<Void, InsertRowsQu
         while (rowsIterator.hasNext()) {
             externalRow = rowsIterator.next();
 
+            // indicates whether the record has been deleted
+            writer.writeByte((byte)0);
+
             for (int i = 0; i < columns.length; i++) {
                 cellValue = externalRow.get(columnOrderMap[i]);
 

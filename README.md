@@ -50,6 +50,22 @@ Samples:
 - `get customers [age > :age & city = :city] where [:age = 20 & :city = London]`
 - `get users [id > :id | name = :name] where [:name = "John" & :id = 50]`
 
+### Delete records
+
+Syntax:
+```
+delete %table_name%
+```
+```
+delete %table_name% %conditions% where %placeholders%
+```
+
+Samples:
+- `delete my_table`
+- `delete users [id = :id] where [:id = 1]`
+- `delete customers [age > :age & city = :city] where [:age = 20 & :city = London]`
+- `delete users [id > :id | name = :name] where [:name = "John" & :id = 50]`
+
 # How data is stored
 **xstdb** utilizes two files to store data: *%table%.dat* and *%table%.def*. The first one contains records, the latter - table's definition.
 

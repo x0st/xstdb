@@ -1,4 +1,4 @@
-package database.query.parser;
+package database.rawquery.parser;
 
 abstract public class Token {
     public static final byte WORD = 0;

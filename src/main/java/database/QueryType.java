@@ -1,14 +1,19 @@
 package database;
 
 public enum QueryType {
-    // create a table
-    ADD,
-    // insert a record
-    PUT,
-    // show info about a table
-    SHOW,
-    // select records from a table
-    GET,
-    // delete records from a table
-    DELETE
+    ADD(1),
+    PUT(2),
+    SHOW(3),
+    GET(4),
+    DELETE(5);
+
+    private final int mType;
+
+    QueryType(int type) {
+        mType = type;
+    }
+
+    public int getType() {
+        return mType;
+    }
 }

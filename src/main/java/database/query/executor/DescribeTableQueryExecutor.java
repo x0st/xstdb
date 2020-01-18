@@ -4,8 +4,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import database.DataType;
-import database.query.Table;
-import database.query.TableFactory;
+import database.Table;
+import database.TableFactory;
 import database.contract.Query;
 import database.contract.QueryExecutor;
 import database.exception.BadQueryException;

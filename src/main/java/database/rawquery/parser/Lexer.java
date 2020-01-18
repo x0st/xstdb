@@ -1,4 +1,9 @@
-package database.query.parser;
+package database.rawquery.parser;
+
+import java.io.ByteArrayInputStream;
+import java.io.Closeable;
+import java.io.IOException;
+import java.io.InputStream;
 
 import database.contract.LexerInterface;
 import database.exception.TokenizationException;
@@ -20,7 +25,7 @@ public class Lexer implements LexerInterface {
     /**
      * The input data.
      */
-    private char[] input;
+    private InputStream input;
 
     /**
      * Just a place where the lexeme being processed at the moment is stored.
@@ -81,25 +86,26 @@ public class Lexer implements LexerInterface {
      *
      * @param is input the lexer will analyze lexically.
      */
-    public Lexer(char[] is) {
+    public Lexer(InputStream is) {
         input = is;
         buffer = new char[1024];
     }
 
+
     /**
-     * Constructor.
+     * Constructor for tests.
      */
     public Lexer() {
-        this(new char[0]);
+        this(new ByteArrayInputStream(new byte[0]));
     }
 
     /**
-     * Set the given input as new and reset all the values of properties to default values.
+     * Provide a new stream a Lexer will read out of.
      *
-     * @param val input the lexer will analyze lexically.
+     * @param stream
      */
-    public void setInput(char[] val) {
-        input = val;
+    public void setInput(InputStream stream) {
+        input = stream;
 
         nextChar = -1;
         prevChar = -1;
@@ -108,6 +114,15 @@ public class Lexer implements LexerInterface {
         inputPointer = 0;
 
         bufferSize = 0;
+    }
+
+    /**
+     * Set the given input as new and reset all the values of properties to default values.
+     *
+     * @param val input the lexer will analyze lexically.
+     */
+    public void setInput(char[] val) {
+        setInput(new ByteArrayInputStream(String.valueOf(val).getBytes()));
     }
 
     /**
@@ -120,14 +135,20 @@ public class Lexer implements LexerInterface {
     }
 
     /**
-     * Move forward the pointer in the input by 1 position.
+     * Move the pointer forward in the input by 1 position.
      *
      * @return new value for the currChar property
      */
     private int readInput() {
-        if (input.length > inputPointer) {
-            return input[inputPointer++];
-        } else {
+        try {
+            if (nextChar != -1) {
+                inputPointer++;
+                return nextChar;
+            }
+            int b = input.read();
+            inputPointer++;
+            return b;
+        } catch (IOException e) {
             return -1;
         }
     }
@@ -138,9 +159,9 @@ public class Lexer implements LexerInterface {
      * @return new value for the nextChar property
      */
     private int lookAhead() {
-        if (input.length > inputPointer) {
-            return input[inputPointer];
-        } else {
+        try {
+            return input.read();
+        } catch (IOException e) {
             return -1;
         }
     }
@@ -215,6 +236,10 @@ public class Lexer implements LexerInterface {
         return chr == 32;
     }
 
+    private boolean isNewLine(int chr) {
+        return chr == 10;
+    }
+
     private int asciiToInt(int value) {
         if (value >= 48 && value <= 57) {
             return value - 48;
@@ -266,7 +291,7 @@ public class Lexer implements LexerInterface {
                 } else {
                     bufferSize = 0;
 
-                    if (currChar != -1 && !isSpace(currChar)) {
+                    if (currChar != -1 && !isSpace(currChar) && !isNewLine(currChar)) {
                         throwException();
                     }
                 }

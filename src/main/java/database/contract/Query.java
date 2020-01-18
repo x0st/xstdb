@@ -1,4 +1,6 @@
 package database.contract;
 
-public interface Query {
+import io.mappedbus.MappedBusMessage;
+
+public interface Query extends HasTableName, MappedBusMessage {
 }

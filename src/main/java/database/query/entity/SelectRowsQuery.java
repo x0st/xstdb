@@ -5,8 +5,9 @@ import database.contract.HasTableName;
 import database.contract.Query;
 import database.query.expression.PlaceholderObject;
 import database.query.expression.parser.ASTNode;
+import io.mappedbus.MemoryMappedFile;
 
-public class SelectRowsQuery implements Query, HasTableName, HasPredicate {
+public class SelectRowsQuery implements Query, HasPredicate {
     private String mTableName;
     private ASTNode mExpression;
     private PlaceholderObject mPlaceholders;
@@ -33,5 +34,20 @@ public class SelectRowsQuery implements Query, HasTableName, HasPredicate {
 
     public PlaceholderObject getAttributes() {
         return mPlaceholders;
+    }
+
+    @Override
+    public void write(MemoryMappedFile mem, long pos) {
+
+    }
+
+    @Override
+    public void read(MemoryMappedFile mem, long pos) {
+
+    }
+
+    @Override
+    public int type() {
+        return 0;
     }
 }

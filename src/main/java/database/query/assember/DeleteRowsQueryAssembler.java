@@ -1,20 +1,20 @@
-package database.query.maker;
+package database.query.assember;
 
 import database.DataType;
 import database.QueryType;
 import database.Value;
 import database.contract.LexerInterface;
-import database.contract.QueryMaker;
+import database.contract.QueryAssembler;
 import database.exception.BadQueryException;
 import database.query.entity.DeleteRowsQuery;
 import database.query.expression.PlaceholderObject;
 import database.query.expression.parser.ASTNode;
-import database.query.parser.Lexer;
-import database.query.parser.Token;
+import database.rawquery.parser.Lexer;
+import database.rawquery.parser.Token;
 
-public class DeleteRowsQueryMaker extends BaseQueryMaker implements QueryMaker<DeleteRowsQuery> {
+public class DeleteRowsQueryAssembler extends BaseQueryAssembler implements QueryAssembler<DeleteRowsQuery> {
     @Override
-    public DeleteRowsQuery make(LexerInterface lexer) throws BadQueryException {
+    public DeleteRowsQuery assemble(LexerInterface lexer) throws BadQueryException {
         String tableName;
         ASTNode astNode = null;
         PlaceholderObject predicateValues = null;

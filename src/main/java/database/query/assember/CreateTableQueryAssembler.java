@@ -1,18 +1,18 @@
-package database.query.maker;
+package database.query.assember;
 
 import database.DataType;
 import database.QueryType;
 import database.contract.LexerInterface;
-import database.contract.QueryMaker;
+import database.contract.QueryAssembler;
 import database.exception.BadQueryException;
 import database.exception.BuilderException;
 import database.query.entity.CreateTableQuery;
-import database.query.parser.Token;
+import database.rawquery.parser.Token;
 import database.scheme.ColumnScheme;
 
-public class CreateTableQueryMaker extends BaseQueryMaker implements QueryMaker<CreateTableQuery> {
+public class CreateTableQueryAssembler extends BaseQueryAssembler implements QueryAssembler<CreateTableQuery> {
     @Override
-    public CreateTableQuery make(LexerInterface lexer) throws BadQueryException {
+    public CreateTableQuery assemble(LexerInterface lexer) throws BadQueryException {
         CreateTableQuery.Builder builder = CreateTableQuery.builder();
 
         builder.table(takeTableName(lexer));

@@ -8,8 +8,8 @@ import java.io.File;
 import java.io.IOException;
 
 import database.DataType;
-import database.query.Table;
-import database.query.TableFactory;
+import database.Table;
+import database.TableFactory;
 import database.contract.HasTableName;
 import database.exception.BadQueryException;
 import database.io.IOFacilityFactory;

@@ -1,6 +1,6 @@
 package database.contract;
 
-import database.QueryType;
+import database.query.QueryType;
 import database.exception.BadQueryException;
 
 public interface QueryAssembler<T extends Query> {

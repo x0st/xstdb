@@ -11,7 +11,7 @@ import database.Table;
 import database.TableFactory;
 import database.Value;
 import database.contract.Query;
-import database.contract.QueryExecutor;
+import database.contract.QueryExecutorInterface;
 import database.contract.Record;
 import database.exception.BadQueryException;
 import database.io.IOFacilityFactory;
@@ -23,12 +23,12 @@ import database.scheme.ColumnScheme;
 import database.scheme.TableScheme;
 import database.io.Reader;
 
-public class SelectRowsQueryExecutor implements QueryExecutor<SelectRowsQueryOutput, SelectRowsQuery> {
+public class SelectRowsQueryExecutor implements QueryExecutorInterface<SelectRowsQueryOutput, SelectRowsQuery> {
     private final TableFactory mTableFactory;
-    private final QueryExecutor<TableScheme, DescribeTableQuery> mDescribeTableQueryExecutor;
+    private final QueryExecutorInterface<TableScheme, DescribeTableQuery> mDescribeTableQueryExecutor;
     private final IOFacilityFactory mIOFacilityFactory;
 
-    public SelectRowsQueryExecutor(IOFacilityFactory ioFacilityFactory, TableFactory factory, QueryExecutor<TableScheme, DescribeTableQuery> describeTableQueryExecutor) {
+    public SelectRowsQueryExecutor(IOFacilityFactory ioFacilityFactory, TableFactory factory, QueryExecutorInterface<TableScheme, DescribeTableQuery> describeTableQueryExecutor) {
         mIOFacilityFactory = ioFacilityFactory;
         mTableFactory = factory;
         mDescribeTableQueryExecutor = describeTableQueryExecutor;

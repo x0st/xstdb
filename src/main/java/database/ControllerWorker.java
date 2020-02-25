@@ -1,6 +1,5 @@
 package database;
 
-import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
@@ -13,21 +12,21 @@ import database.contract.Worker;
 import database.exception.BadQueryException;
 import database.query.QueryFactory;
 import database.query.QueryIdentifier;
+import database.query.QueryTransport;
 import database.query.assember.CreateTableQueryAssembler;
 import database.query.assember.DeleteRowsQueryAssembler;
 import database.query.assember.DescribeTableQueryAssembler;
 import database.query.assember.InsertRowsQueryAssembler;
 import database.query.assember.SelectRowsQueryAssembler;
 import database.rawquery.LexerFactory;
-import database.rawquery.parser.Lexer;
 
-public class SocketWorker implements Worker {
+public class ControllerWorker implements Worker {
     private QueryFactory mQueryFactory;
     private LexerFactory mLexerFactory;
     private ServerSocket mServer;
     private Tube mTube;
 
-    private SocketWorker(Integer port) throws IOException {
+    private ControllerWorker(Integer port) throws IOException {
         mServer = new ServerSocket(port);
         mLexerFactory = new LexerFactory();
         mQueryFactory = new QueryFactory(
@@ -56,7 +55,7 @@ public class SocketWorker implements Worker {
             }
         }
 
-        new SocketWorker(port).run();
+        new ControllerWorker(port).run();
     }
 
     public void run() throws Throwable {

@@ -145,9 +145,13 @@ public class Lexer implements LexerInterface {
                 inputPointer++;
                 return nextChar;
             }
-            int b = input.read();
-            inputPointer++;
-            return b;
+            if (input.available() > 0) {
+                int b = input.read();
+                inputPointer++;
+                return b;
+            } else {
+                return -1;
+            }
         } catch (IOException e) {
             return -1;
         }
@@ -160,7 +164,11 @@ public class Lexer implements LexerInterface {
      */
     private int lookAhead() {
         try {
-            return input.read();
+            if (input.available() > 0) {
+                return input.read();
+            } else {
+                return -1;
+            }
         } catch (IOException e) {
             return -1;
         }

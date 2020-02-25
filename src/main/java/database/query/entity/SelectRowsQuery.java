@@ -7,7 +7,7 @@ import database.query.expression.PlaceholderObject;
 import database.query.expression.parser.ASTNode;
 import io.mappedbus.MemoryMappedFile;
 
-public class SelectRowsQuery implements Query, HasPredicate {
+public class SelectRowsQuery extends AbstractQuery implements HasPredicate {
     private String mTableName;
     private ASTNode mExpression;
     private PlaceholderObject mPlaceholders;
@@ -37,12 +37,12 @@ public class SelectRowsQuery implements Query, HasPredicate {
     }
 
     @Override
-    public void write(MemoryMappedFile mem, long pos) {
+    protected void writeIntoMemoryMappedFile(MemoryMappedFile mem, long pos) {
 
     }
 
     @Override
-    public void read(MemoryMappedFile mem, long pos) {
+    protected void recreateFromMemoryMappedFile(MemoryMappedFile mem, long pos) {
 
     }
 

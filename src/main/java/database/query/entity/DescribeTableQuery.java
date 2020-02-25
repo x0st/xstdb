@@ -4,7 +4,7 @@ import database.contract.HasTableName;
 import database.contract.Query;
 import io.mappedbus.MemoryMappedFile;
 
-public class DescribeTableQuery implements Query {
+public class DescribeTableQuery extends AbstractQuery {
     private String tableName;
 
     public DescribeTableQuery(String table) {
@@ -20,12 +20,12 @@ public class DescribeTableQuery implements Query {
     }
 
     @Override
-    public void write(MemoryMappedFile mem, long pos) {
+    protected void writeIntoMemoryMappedFile(MemoryMappedFile mem, long pos) {
 
     }
 
     @Override
-    public void read(MemoryMappedFile mem, long pos) {
+    protected void recreateFromMemoryMappedFile(MemoryMappedFile mem, long pos) {
 
     }
 

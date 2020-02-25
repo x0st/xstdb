@@ -1,6 +1,6 @@
 package database.query.assember;
 
-import database.QueryType;
+import database.query.QueryType;
 import database.contract.LexerInterface;
 import database.contract.QueryAssembler;
 import database.exception.BadQueryException;

@@ -1,31 +1,29 @@
 package database;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
 import database.contract.Query;
-import database.contract.QueryExecutor;
+import database.contract.QueryExecutorInterface;
 import database.contract.Tube;
 import database.contract.Worker;
+import database.exception.BadQueryException;
 import database.io.IOFacilityFactory;
+import database.query.QueryTransport;
 import database.query.executor.CreateTableQueryExecutor;
 import database.query.executor.DeleteRowsQueryExecutor;
 import database.query.executor.DescribeTableQueryExecutor;
 import database.query.executor.InsertRowsQueryExecutor;
 import database.query.executor.SelectRowsQueryExecutor;
-import io.mappedbus.MappedBusReader;
 
 public class QueryRunnerWorker implements Worker {
-    private IOFacilityFactory mIOFacilityFactory;
-    private TableFactory mTableFactory;
     private Tube mTube;
 
-    private ArrayList<QueryExecutor> mQueryExecutors;
+    private ArrayList<QueryExecutorInterface> mQueryExecutors;
 
     private QueryRunnerWorker(String databasePath, Integer bufferSize) throws IOException {
-        mTableFactory = new TableFactory(databasePath, new FileFactory());
-        mIOFacilityFactory = new IOFacilityFactory(bufferSize);
+        TableFactory mTableFactory = new TableFactory(databasePath, new FileFactory());
+        IOFacilityFactory mIOFacilityFactory = new IOFacilityFactory(bufferSize);
 
         mTube = QueryTransport.Builder.forReading();
 
@@ -65,10 +63,17 @@ public class QueryRunnerWorker implements Worker {
             if (mTube.has()) {
                 query = mTube.pop();
 
-                for (QueryExecutor mQueryExecutor : mQueryExecutors) {
-                    if (mQueryExecutor.executes(query)) {
+                for (QueryExecutorInterface queryExecutor : mQueryExecutors) {
+                    if (queryExecutor.executes(query)) {
+                        try {
+                            queryExecutor.execute(query);
 
-                        mQueryExecutor.execute(query);
+                            System.out.println(String.format("Processed a query"));
+                        } catch (BadQueryException badQueryException) {
+                            System.out.println(String.format("BadQueryException: %s", badQueryException.getMessage()));
+                        } catch (IOException ioException) {
+                            System.out.println(String.format("IOException: %s", ioException.getMessage()));
+                        }
                     }
                 }
             }

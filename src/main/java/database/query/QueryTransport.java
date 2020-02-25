@@ -1,7 +1,8 @@
-package database;
+package database.query;
 
 import java.io.EOFException;
 import java.io.IOException;
+import java.util.UUID;
 
 import database.contract.Query;
 import database.contract.Tube;
@@ -24,8 +25,12 @@ public class QueryTransport implements Tube {
     }
 
     @Override
-    public void push(Query query) throws IOException {
+    public String push(Query query) throws IOException {
+        query.setTrackingUID(UUID.randomUUID().toString());
+
         mMappedBusWriter.write(query);
+
+        return query.getTrackingUID();
     }
 
     @Override
@@ -33,10 +38,8 @@ public class QueryTransport implements Tube {
         Query query = null;
 
         if (mMappedBusReader.readType() == QueryType.ADD.getType()) {
-            query = new CreateTableQuery();
+            query = CreateTableQuery.Factory.makeFromMemoryMappedFile(mMappedBusReader);
         }
-
-        mMappedBusReader.readMessage(query);
 
         return query;
     }

@@ -4,7 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import database.DataType;
-import database.QueryType;
+import database.query.QueryType;
 import database.Row;
 import database.Value;
 import database.contract.LexerInterface;

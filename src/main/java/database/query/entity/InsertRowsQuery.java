@@ -9,7 +9,7 @@ import database.contract.Query;
 import database.exception.BuilderException;
 import io.mappedbus.MemoryMappedFile;
 
-public class InsertRowsQuery implements Query {
+public class InsertRowsQuery extends AbstractQuery {
     private final String mTableName;
     private final List<Record> mData;
     private final List<String> mColumnOrder;
@@ -37,12 +37,12 @@ public class InsertRowsQuery implements Query {
     }
 
     @Override
-    public void write(MemoryMappedFile mem, long pos) {
+    protected void writeIntoMemoryMappedFile(MemoryMappedFile mem, long pos) {
 
     }
 
     @Override
-    public void read(MemoryMappedFile mem, long pos) {
+    protected void recreateFromMemoryMappedFile(MemoryMappedFile mem, long pos) {
 
     }
 

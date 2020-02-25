@@ -4,25 +4,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 import database.DataType;
-import database.QueryType;
+import database.query.QueryType;
 import database.contract.Query;
 import database.exception.BuilderException;
 import database.scheme.ColumnScheme;
 import database.scheme.TableScheme;
+import io.mappedbus.MappedBusReader;
 import io.mappedbus.MemoryMappedFile;
 
-public class CreateTableQuery implements Query {
+public class CreateTableQuery extends AbstractQuery {
     private TableScheme tableScheme;
-
-    public CreateTableQuery(String table, ColumnScheme[] columnSchemeList) {
-        tableScheme = new TableScheme(table.toCharArray(), 0, columnSchemeList);
-    }
 
     public CreateTableQuery(char[] table, ColumnScheme[] columnSchemeList) {
         tableScheme = new TableScheme(table, 0, columnSchemeList);
     }
 
-    public CreateTableQuery() {
+    private CreateTableQuery() {
 
     }
 
@@ -40,7 +37,7 @@ public class CreateTableQuery implements Query {
     }
 
     @Override
-    public void write(MemoryMappedFile mem, long pos) {
+    public void writeIntoMemoryMappedFile(MemoryMappedFile mem, long pos) {
         // contains the number of bytes that have been already written for column's definition
         int writtenForColumns = 0;
 
@@ -68,7 +65,7 @@ public class CreateTableQuery implements Query {
     }
 
     @Override
-    public void read(MemoryMappedFile mem, long pos) {
+    public void recreateFromMemoryMappedFile(MemoryMappedFile mem, long pos) {
         // indicates how many bytes have been read for the definition of columns
         int readForColumns = 0;
 
@@ -114,6 +111,16 @@ public class CreateTableQuery implements Query {
     @Override
     public int type() {
         return QueryType.ADD.getType();
+    }
+
+    public static class Factory {
+        public static CreateTableQuery makeFromMemoryMappedFile(MappedBusReader reader) {
+            CreateTableQuery query = new CreateTableQuery();
+
+            reader.readMessage(query);
+
+            return query;
+        }
     }
 
     public static class Builder {

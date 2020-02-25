@@ -1,9 +1,7 @@
 package database.query;
 
-import database.QueryType;
 import database.contract.LexerInterface;
 import database.exception.BadQueryException;
-import database.exception.TokenizationException;
 import database.rawquery.parser.Token;
 
 public class QueryIdentifier {

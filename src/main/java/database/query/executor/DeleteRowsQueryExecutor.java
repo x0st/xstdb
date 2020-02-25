@@ -6,7 +6,7 @@ import database.DataType;
 import database.Row;
 import database.Value;
 import database.contract.Query;
-import database.contract.QueryExecutor;
+import database.contract.QueryExecutorInterface;
 import database.contract.Record;
 import database.exception.BadQueryException;
 import database.io.IOFacilityFactory;
@@ -21,15 +21,15 @@ import database.query.expression.parser.Evaluator;
 import database.scheme.ColumnScheme;
 import database.scheme.TableScheme;
 
-public class DeleteRowsQueryExecutor implements QueryExecutor<Void, DeleteRowsQuery> {
+public class DeleteRowsQueryExecutor implements QueryExecutorInterface<Void, DeleteRowsQuery> {
     private IOFacilityFactory mIOFacilityFactory;
     private TableFactory mTableFactory;
-    private final QueryExecutor<TableScheme, DescribeTableQuery> mDescribeTableQueryQueryExecutor;
+    private final QueryExecutorInterface<TableScheme, DescribeTableQuery> mDescribeTableQueryQueryExecutor;
 
     public DeleteRowsQueryExecutor(
             TableFactory tableFactory,
             IOFacilityFactory ioFacilityFactory,
-            QueryExecutor<TableScheme, DescribeTableQuery> describeTableQueryQueryExecutor
+            QueryExecutorInterface<TableScheme, DescribeTableQuery> describeTableQueryQueryExecutor
     ) {
         mTableFactory = tableFactory;
         mIOFacilityFactory = ioFacilityFactory;

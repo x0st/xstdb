@@ -1,6 +1,5 @@
 package database.query;
 
-import database.QueryType;
 import database.contract.LexerInterface;
 import database.contract.Query;
 import database.exception.BadQueryException;

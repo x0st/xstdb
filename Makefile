@@ -12,7 +12,7 @@ spawn-socket-worker:
 	java -cp build:libs/mappedbus-0.5.1.jar database.SocketWorker
 
 spawn-query-runner-worker:
-	java -cp build database.QueryRunnerWorker
+	java -cp build:libs/mappedbus-0.5.1.jar database.QueryRunnerWorker $(shell pwd)
 
 test-create-table:
 	echo "add users [id INTEGER] [name STRING]" | netcat --tcp localhost 5555

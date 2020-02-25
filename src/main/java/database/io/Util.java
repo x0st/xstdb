@@ -19,6 +19,10 @@ public class Util {
         return chars;
     }
 
+    public static String stringOutOfBytes(byte[] buffer) {
+        return String.valueOf(Util.charSequenceOutOfBytes(buffer));
+    }
+
     public static byte[] integerIntoBytes(int value) {
         return new byte[]{
                 (byte) ((value & 0xFF000000) >> 24),

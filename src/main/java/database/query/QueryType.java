@@ -1,4 +1,4 @@
-package database;
+package database.query;
 
 public enum QueryType {
     ADD(1),

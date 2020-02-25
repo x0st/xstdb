@@ -7,7 +7,7 @@ import database.DataType;
 import database.Table;
 import database.TableFactory;
 import database.contract.Query;
-import database.contract.QueryExecutor;
+import database.contract.QueryExecutorInterface;
 import database.exception.BadQueryException;
 import database.io.IOFacilityFactory;
 import database.query.entity.DescribeTableQuery;
@@ -15,7 +15,7 @@ import database.scheme.ColumnScheme;
 import database.scheme.TableScheme;
 import database.io.Reader;
 
-public class DescribeTableQueryExecutor implements QueryExecutor<TableScheme, DescribeTableQuery> {
+public class DescribeTableQueryExecutor implements QueryExecutorInterface<TableScheme, DescribeTableQuery> {
     private final TableFactory mTableFactory;
     private final IOFacilityFactory mIOFacilityFactory;
 

@@ -5,7 +5,7 @@ import java.io.IOException;
 import database.Table;
 import database.TableFactory;
 import database.contract.Query;
-import database.contract.QueryExecutor;
+import database.contract.QueryExecutorInterface;
 import database.exception.BadQueryException;
 import database.io.IOFacilityFactory;
 import database.io.RAF;
@@ -13,7 +13,7 @@ import database.io.RAF;
 import database.query.entity.CreateTableQuery;
 import database.scheme.ColumnScheme;
 
-public class CreateTableQueryExecutor implements QueryExecutor<Void, CreateTableQuery> {
+public class CreateTableQueryExecutor implements QueryExecutorInterface<Void, CreateTableQuery> {
     private final TableFactory mTableFactory;
     private final IOFacilityFactory mIOFacilityFactory;
 

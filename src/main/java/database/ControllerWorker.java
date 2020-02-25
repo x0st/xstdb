@@ -71,7 +71,6 @@ public class SocketWorker implements Worker {
                     try {
                         query = parseQuery(socket);
                         mTube.push(query);
-                        closeSocket(socket);
                     } catch (BadQueryException e) {
                         handleBadQueryException(socket, e);
                     }
@@ -84,29 +83,29 @@ public class SocketWorker implements Worker {
      * Handle the BadQueryException exception for the given socket connection.
      *
      * @param socket during which connection the exception has occurred
-     * @param e BadQueryException that occurred during parsing query
+     * @param e      BadQueryException that occurred during parsing query
      */
     private void handleBadQueryException(Socket socket, BadQueryException e) throws Throwable {
-        replySocket(socket, e.getMessage());
-        closeSocket(socket);
+        socket.getInputStream().skip(socket.getInputStream().available());
 
-        System.out.println("[" + socket.getInetAddress().getHostAddress() + ":" + socket.getPort() + "] " + e.getMessage());
+        reply(socket, "Error parsing query");
+
+        System.out.println(String.format("[%s:%s] Error parsing query", socket.getInetAddress().getHostAddress(), socket.getPort()));
     }
 
     /**
      * Send a message to a socket connection.
      *
-     * @param socket connection to send to
+     * @param socket  connection to send to
      * @param message what should be sent
      */
-    private void replySocket(Socket socket, String message) throws Throwable {
+    private void reply(Socket socket, String message) throws Throwable {
         PrintWriter writer;
 
         writer = new PrintWriter(socket.getOutputStream());
         writer.println(message);
 
         writer.flush();
-        writer.close();
     }
 
     /**
@@ -115,7 +114,7 @@ public class SocketWorker implements Worker {
     private void closeSocket(Socket socket) throws Throwable {
         socket.close();
 
-        System.out.println("[" + socket.getInetAddress().getHostAddress() + ":" + socket.getPort() + "] " + "Disconnected");
+        System.out.println(String.format("[%s:%s] Disconnected", socket.getInetAddress().getHostAddress(), socket.getPort()));
     }
 
     /**
@@ -127,10 +126,10 @@ public class SocketWorker implements Worker {
         LexerInterface lexer;
         Query query;
 
-        lexer = mLexerFactory.make(new BufferedInputStream(socket.getInputStream()));
+        lexer = mLexerFactory.make(socket.getInputStream());
         query = mQueryFactory.makeFromLexer(lexer);
 
-        System.out.println("[" + socket.getInetAddress().getHostAddress() + ":" + socket.getPort() + "] " + "Sent query");
+        System.out.println(String.format("[%s:%s] Sent query", socket.getInetAddress().getHostAddress(), socket.getPort()));
 
         return query;
     }
@@ -141,7 +140,7 @@ public class SocketWorker implements Worker {
     private Socket acceptSocket() throws IOException {
         Socket socket = mServer.accept();
 
-        System.out.println("[" + socket.getInetAddress().getHostAddress() + ":" + socket.getPort() + "] " + "Connected");
+        System.out.println(String.format("[%s:%s] Connected", socket.getInetAddress().getHostAddress(), socket.getPort()));
 
         return socket;
     }

@@ -2,8 +2,9 @@ package database.query.entity;
 
 import database.contract.HasTableName;
 import database.contract.Query;
+import io.mappedbus.MemoryMappedFile;
 
-public class DescribeTableQuery implements Query, HasTableName {
+public class DescribeTableQuery extends AbstractQuery {
     private String tableName;
 
     public DescribeTableQuery(String table) {
@@ -16,5 +17,20 @@ public class DescribeTableQuery implements Query, HasTableName {
 
     public String getTableName() {
         return tableName;
+    }
+
+    @Override
+    protected void writeIntoMemoryMappedFile(MemoryMappedFile mem, long pos) {
+
+    }
+
+    @Override
+    protected void recreateFromMemoryMappedFile(MemoryMappedFile mem, long pos) {
+
+    }
+
+    @Override
+    public int type() {
+        return 0;
     }
 }

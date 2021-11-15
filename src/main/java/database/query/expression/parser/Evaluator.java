@@ -2,11 +2,10 @@ package database.query.expression.parser;
 
 import java.util.Arrays;
 
-import database.Row;
 import database.contract.Record;
 import database.contract.ValueHolder;
 import database.query.expression.PlaceholderObject;
-import database.query.parser.Token;
+import database.rawquery.parser.Token;
 import database.scheme.ColumnScheme;
 
 public class Evaluator {

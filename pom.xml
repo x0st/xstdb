@@ -7,6 +7,7 @@
     <groupId>org.x0st.database</groupId>
     <artifactId>xstdb</artifactId>
     <version>0.1</version>
+
     <build>
         <plugins>
             <plugin>
@@ -14,41 +15,20 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.6.1</version>
                 <configuration>
-                    <annotationProcessorPaths>
-                        <path>
-                            <groupId>com.google.dagger</groupId>
-                            <artifactId>dagger-compiler</artifactId>
-                            <version>2.20</version>
-                        </path>
-                    </annotationProcessorPaths>
                     <source>1.8</source>
                     <target>1.8</target>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.19.1</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.junit.platform</groupId>
-                        <artifactId>junit-platform-surefire-provider</artifactId>
-                        <version>1.1.0</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.junit.jupiter</groupId>
-                        <artifactId>junit-jupiter-engine</artifactId>
-                        <version>5.1.0</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
         </plugins>
     </build>
+
     <dependencies>
         <dependency>
-            <groupId>com.google.dagger</groupId>
-            <artifactId>dagger</artifactId>
-            <version>2.20</version>
+            <groupId>com.sample</groupId>
+            <artifactId>io.mappedbus</artifactId>
+            <version>0.5.1</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/libs/mappedbus-0.5.1.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
@@ -57,8 +37,8 @@
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-            <version>5.1.0</version>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>5.4.0</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

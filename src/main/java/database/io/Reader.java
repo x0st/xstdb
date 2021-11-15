@@ -5,12 +5,17 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 
 public class Reader {
     private BufferedInputStream mInputStream;
 
     public Reader(File file, int bufferSize) throws FileNotFoundException {
         mInputStream = new BufferedInputStream(new FileInputStream(file), bufferSize);
+    }
+
+    public Reader(InputStream stream, int bufferSize) {
+        mInputStream = new BufferedInputStream(stream, bufferSize);
     }
 
     public void skip(long skip) throws IOException {

@@ -11,10 +11,10 @@ import database.query.expression.parser.ASTNode;
 import database.query.expression.parser.Evaluator;
 import database.scheme.ColumnScheme;
 
-import static database.query.parser.Token.WORD;
-import static database.query.parser.Token.PLACEHOLDER;
-import static database.query.parser.Token.MATH_OPERATOR;
-import static database.query.parser.Token.LOGICAL_OPERATOR;
+import static database.rawquery.parser.Token.WORD;
+import static database.rawquery.parser.Token.PLACEHOLDER;
+import static database.rawquery.parser.Token.MATH_OPERATOR;
+import static database.rawquery.parser.Token.LOGICAL_OPERATOR;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

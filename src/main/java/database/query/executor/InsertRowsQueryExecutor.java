@@ -7,10 +7,10 @@ import java.util.Iterator;
 import java.util.List;
 
 import database.DataType;
-import database.query.Table;
-import database.query.TableFactory;
+import database.Table;
+import database.TableFactory;
 import database.contract.Query;
-import database.contract.QueryExecutor;
+import database.contract.QueryExecutorInterface;
 import database.contract.Record;
 import database.contract.ValueHolder;
 import database.exception.BadQueryException;
@@ -22,12 +22,12 @@ import database.scheme.TableScheme;
 import database.io.RAF;
 import database.io.Writer;
 
-public class InsertRowsQueryExecutor implements QueryExecutor<Void, InsertRowsQuery> {
+public class InsertRowsQueryExecutor implements QueryExecutorInterface<Void, InsertRowsQuery> {
     private final TableFactory mTableFactory;
     private final IOFacilityFactory mIOFacilityFactory;
-    private final QueryExecutor<TableScheme, DescribeTableQuery> mDescribeTableQueryExecutor;
+    private final QueryExecutorInterface<TableScheme, DescribeTableQuery> mDescribeTableQueryExecutor;
 
-    public InsertRowsQueryExecutor(IOFacilityFactory ioFacilityFactory, TableFactory tableFactory, QueryExecutor<TableScheme, DescribeTableQuery> describeTableQueryExecutor) {
+    public InsertRowsQueryExecutor(IOFacilityFactory ioFacilityFactory, TableFactory tableFactory, QueryExecutorInterface<TableScheme, DescribeTableQuery> describeTableQueryExecutor) {
         mIOFacilityFactory = ioFacilityFactory;
         mTableFactory = tableFactory;
         mDescribeTableQueryExecutor = describeTableQueryExecutor;

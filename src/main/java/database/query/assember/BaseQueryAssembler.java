@@ -1,12 +1,12 @@
-package database.query.maker;
+package database.query.assember;
 
 import java.util.Arrays;
 
 import database.contract.LexerInterface;
 import database.exception.BadQueryException;
-import database.query.parser.Token;
+import database.rawquery.parser.Token;
 
-abstract public class BaseQueryMaker {
+abstract public class BaseQueryAssembler {
     protected char[] takeTableName(LexerInterface lexer) throws BadQueryException {
         lexer.next();
         assertToken(Token.WORD, lexer);

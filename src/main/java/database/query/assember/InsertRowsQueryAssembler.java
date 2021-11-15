@@ -1,24 +1,24 @@
-package database.query.maker;
+package database.query.assember;
 
 import java.util.LinkedList;
 import java.util.List;
 
 import database.DataType;
-import database.QueryType;
+import database.query.QueryType;
 import database.Row;
 import database.Value;
 import database.contract.LexerInterface;
-import database.contract.QueryMaker;
+import database.contract.QueryAssembler;
 import database.contract.Record;
 import database.exception.BadQueryException;
 import database.exception.BuilderException;
 import database.query.entity.InsertRowsQuery;
-import database.query.parser.Lexer;
-import database.query.parser.Token;
+import database.rawquery.parser.Lexer;
+import database.rawquery.parser.Token;
 
-public class InsertRowsQueryMaker extends BaseQueryMaker implements QueryMaker<InsertRowsQuery> {
+public class InsertRowsQueryAssembler extends BaseQueryAssembler implements QueryAssembler<InsertRowsQuery> {
     @Override
-    public InsertRowsQuery make(LexerInterface lexer) throws BadQueryException {
+    public InsertRowsQuery assemble(LexerInterface lexer) throws BadQueryException {
         InsertRowsQuery.Builder builder = InsertRowsQuery.builder();
 
         builder.table(takeTableName(lexer));

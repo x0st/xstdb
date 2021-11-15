@@ -7,8 +7,9 @@ import database.contract.Record;
 import database.contract.HasTableName;
 import database.contract.Query;
 import database.exception.BuilderException;
+import io.mappedbus.MemoryMappedFile;
 
-public class InsertRowsQuery implements Query, HasTableName {
+public class InsertRowsQuery extends AbstractQuery {
     private final String mTableName;
     private final List<Record> mData;
     private final List<String> mColumnOrder;
@@ -33,6 +34,21 @@ public class InsertRowsQuery implements Query, HasTableName {
 
     public static Builder builder() {
         return new Builder();
+    }
+
+    @Override
+    protected void writeIntoMemoryMappedFile(MemoryMappedFile mem, long pos) {
+
+    }
+
+    @Override
+    protected void recreateFromMemoryMappedFile(MemoryMappedFile mem, long pos) {
+
+    }
+
+    @Override
+    public int type() {
+        return 0;
     }
 
     public static class Builder {

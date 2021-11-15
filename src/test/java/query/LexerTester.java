@@ -5,8 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 
 import database.exception.TokenizationException;
-import database.query.parser.Lexer;
-import database.query.parser.Token;
+import database.rawquery.parser.Lexer;
+import database.rawquery.parser.Token;
 
 public class LexerTester {
 

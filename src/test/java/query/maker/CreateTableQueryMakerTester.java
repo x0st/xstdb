@@ -8,20 +8,20 @@ import database.DataType;
 import database.exception.BadQueryException;
 import database.query.QueryIdentifier;
 import database.query.entity.CreateTableQuery;
-import database.query.maker.CreateTableQueryMaker;
-import database.query.parser.Lexer;
+import database.query.assember.CreateTableQueryAssembler;
+import database.rawquery.parser.Lexer;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CreateTableQueryMakerTester {
-    private CreateTableQueryMaker mMaker;
+    private CreateTableQueryAssembler mMaker;
     private Lexer mLexer;
     private QueryIdentifier mQueryIdentifier;
 
     @BeforeEach
     public void instantiateDependencies() {
         mQueryIdentifier = new QueryIdentifier();
-        mMaker = new CreateTableQueryMaker();
+        mMaker = new CreateTableQueryAssembler();
         mLexer = new Lexer();
     }
 
@@ -30,7 +30,7 @@ public class CreateTableQueryMakerTester {
         mLexer.setInput("add users [".toCharArray());
         mQueryIdentifier.identify(mLexer);
 
-        Assertions.assertThrows(BadQueryException.class, () -> mMaker.make(mLexer));
+        Assertions.assertThrows(BadQueryException.class, () -> mMaker.assemble(mLexer));
     }
 
     @Test
@@ -38,7 +38,7 @@ public class CreateTableQueryMakerTester {
         mLexer.setInput("add users".toCharArray());
         mQueryIdentifier.identify(mLexer);
 
-        Assertions.assertThrows(BadQueryException.class, () -> mMaker.make(mLexer));
+        Assertions.assertThrows(BadQueryException.class, () -> mMaker.assemble(mLexer));
     }
 
     @Test
@@ -46,7 +46,7 @@ public class CreateTableQueryMakerTester {
         mLexer.setInput("add users []".toCharArray());
         mQueryIdentifier.identify(mLexer);
 
-        Assertions.assertThrows(BadQueryException.class, () -> mMaker.make(mLexer));
+        Assertions.assertThrows(BadQueryException.class, () -> mMaker.assemble(mLexer));
     }
 
     @Test
@@ -54,7 +54,7 @@ public class CreateTableQueryMakerTester {
         mLexer.setInput("add users [id] [id]".toCharArray());
         mQueryIdentifier.identify(mLexer);
 
-        Assertions.assertThrows(BadQueryException.class, () -> mMaker.make(mLexer));
+        Assertions.assertThrows(BadQueryException.class, () -> mMaker.assemble(mLexer));
     }
 
     @Test
@@ -62,7 +62,7 @@ public class CreateTableQueryMakerTester {
         mLexer.setInput("add users [id TYPE]".toCharArray());
         mQueryIdentifier.identify(mLexer);
 
-        Assertions.assertThrows(BadQueryException.class, () -> mMaker.make(mLexer));
+        Assertions.assertThrows(BadQueryException.class, () -> mMaker.assemble(mLexer));
     }
 
     @Test
@@ -70,7 +70,7 @@ public class CreateTableQueryMakerTester {
         mLexer.setInput("add users [id TYPE".toCharArray());
         mQueryIdentifier.identify(mLexer);
 
-        Assertions.assertThrows(BadQueryException.class, () -> mMaker.make(mLexer));
+        Assertions.assertThrows(BadQueryException.class, () -> mMaker.assemble(mLexer));
     }
 
     @Test
@@ -78,7 +78,7 @@ public class CreateTableQueryMakerTester {
         mLexer.setInput("add users [id TYPE]".toCharArray());
         mQueryIdentifier.identify(mLexer);
 
-        Assertions.assertThrows(BadQueryException.class, () -> mMaker.make(mLexer));
+        Assertions.assertThrows(BadQueryException.class, () -> mMaker.assemble(mLexer));
     }
 
     @Test
@@ -86,7 +86,7 @@ public class CreateTableQueryMakerTester {
         mLexer.setInput("add users [id STRING] [name TYPE]".toCharArray());
         mQueryIdentifier.identify(mLexer);
 
-        Assertions.assertThrows(BadQueryException.class, () -> mMaker.make(mLexer));
+        Assertions.assertThrows(BadQueryException.class, () -> mMaker.assemble(mLexer));
     }
 
     @Test
@@ -94,7 +94,7 @@ public class CreateTableQueryMakerTester {
         mLexer.setInput("add users [id STRING] [name]".toCharArray());
         mQueryIdentifier.identify(mLexer);
 
-        Assertions.assertThrows(BadQueryException.class, () -> mMaker.make(mLexer));
+        Assertions.assertThrows(BadQueryException.class, () -> mMaker.assemble(mLexer));
     }
 
     @Test
@@ -102,7 +102,7 @@ public class CreateTableQueryMakerTester {
         mLexer.setInput("add users [id INTEGER] [name STRING]".toCharArray());
         mQueryIdentifier.identify(mLexer);
 
-        CreateTableQuery query = mMaker.make(mLexer);
+        CreateTableQuery query = mMaker.assemble(mLexer);
 
         assertEquals("users", query.getTableName());
         assertEquals(2, query.getTableScheme().getColumns().length);
@@ -119,7 +119,7 @@ public class CreateTableQueryMakerTester {
         mLexer.setInput("add users [id INTEGER]".toCharArray());
         mQueryIdentifier.identify(mLexer);
 
-        CreateTableQuery query = mMaker.make(mLexer);
+        CreateTableQuery query = mMaker.assemble(mLexer);
 
         assertEquals("users", query.getTableName());
         assertEquals(1, query.getTableScheme().getColumns().length);
@@ -133,7 +133,7 @@ public class CreateTableQueryMakerTester {
         mLexer.setInput("add users [id INTEGER] [bla INTEGER]".toCharArray());
         mQueryIdentifier.identify(mLexer);
 
-        CreateTableQuery query = mMaker.make(mLexer);
+        CreateTableQuery query = mMaker.assemble(mLexer);
 
         assertEquals("users", query.getTableName());
         assertEquals(2, query.getTableScheme().getColumns().length);
@@ -150,7 +150,7 @@ public class CreateTableQueryMakerTester {
         mLexer.setInput("add users [id STRING] [bla STRING]".toCharArray());
         mQueryIdentifier.identify(mLexer);
 
-        CreateTableQuery query = mMaker.make(mLexer);
+        CreateTableQuery query = mMaker.assemble(mLexer);
 
         assertEquals("users", query.getTableName());
         assertEquals(2, query.getTableScheme().getColumns().length);
